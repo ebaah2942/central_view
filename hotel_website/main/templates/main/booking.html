@@ -1,0 +1,61 @@
+
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Book Room{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+  <h1 class="text-center mb-4">Book Room</h1>
+  <div class="row justify-content-center">
+      <div class="col-md-6">
+          <form action="{% url 'book_room' room_id=room.id %}" method="POST">
+              {% csrf_token %}
+              
+              <!-- Render the form fields with Bootstrap styling -->
+              <div class="form-group mb-3">
+                  {{ form.as_p }}
+              </div>
+
+              <!-- Submit Button -->
+              <button class="btn btn-primary w-100" type="submit">Book Now</button>
+          </form>
+      </div>
+  </div>
+</div>
+
+
+
+
+<style>
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+  
+    @keyframes slideUp {
+      0% {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+  </style>
+
+{% endblock %}

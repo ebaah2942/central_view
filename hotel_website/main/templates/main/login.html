@@ -1,0 +1,77 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="solace3" class="container mt-3">
+    <div class="row justify-content-center">
+        <h1 class="text-center mb-4">Login</h1>
+        <div class="col-md-6">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }} 
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+            </form>
+            <div>
+                <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+
+    .solace3 {
+      text-align: center;
+      font-family: 'Montserrat', serif;
+      margin: 2rem auto;
+      max-width: 400px;
+       
+    }
+    button {
+      animation: pulse 2s infinite;
+      background-color: #007bff;
+      color: white;
+      padding: 0.75rem 2rem;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+
+    }
+
+    .solace3 p {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+  
+    @keyframes slideUp {
+      0% {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+  </style>
+{% endblock %}

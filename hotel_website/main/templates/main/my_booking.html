@@ -1,0 +1,55 @@
+
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}My Bookings{% endblock %}
+
+{% block content %}
+<h1>My Bookings</h1>
+<hr>
+
+{% for booking in bookings %}
+    <div class="container-card">
+        <div class="adjo">
+            <p>Name: {{ name }} - Contacts: {{ phone_number }}</p> 
+            <h3>{{ forloop.counter }}. {{ booking.room.name }}</h3>
+            <p>Type of room: {{ booking.room }}</p>
+            <p>Check-in: {{ booking.check_in }}</p>
+            <p>Check-out: {{ booking.check_out }}</p>
+            <p>Price per day: GHS {{ booking.room.price }}</p>
+            <p>Number of days: {{ booking.num_of_day }}</p>
+            <p>Total Price: GHS {{ booking.total_price }}</p>
+            <p>Quantity: {{ booking.quantity }}</p>
+            <p style="color: red; font-weight: bold; font-style: italic;">Kindly call to confirm availability and make payment: <i class="fa-solid fa-phone"></i>+233 59 433 2382</p> 
+            <p>Do you want to add another booking? <a style="text-decoration: none;" href="{% url 'book_room' room_id=booking.room.id %}"><i class="fas fa-plus"></i> Book Now</a></p> 
+            <a href="{% url 'update_booking' booking.id %}" class="btn btn-warning"><i class="fas fa-edit"></i> Edit Booking</a>
+            <form action="{% url 'delete_booking' booking.id %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button class=" btn btn-danger" type="submit"><i class="fas fa-trash"></i> Delete</button>
+            </form>  
+        </div>
+        <hr>
+        
+        {% empty %}
+        <p>You have no bookings.</p>
+{% endfor %}
+{% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+{% endif %}
+{% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+{% endif %}    
+    </div>
+<style>
+.adjo {
+    padding: 20px; 
+    border-radius: 5px; 
+    text-align: left; 
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); 
+    background-color: #f2f2f2; 
+    font-family: 'Montserrat', serif
+    
+}
+</style>
+
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<style>
+    .solace {
+        background-image: url('{% static "images/rece5.JPG" %}');
+        background-size: cover;
+        height: 600px;
+        width: 100%;
+        text-align: center;
+        margin-top: 0;
+        padding: 100px 0;
+        position: relative;
+
+    }
+    .solace h1 {
+        font-weight: bold;
+        color: purple;
+        font-family: 'Courier New', Courier, monospace;
+        
+    }
+    .solace p {
+        font-family: cursive;
+        color: white;
+        
+    }
+    iframe {
+        width: 200px;
+        position: absolute;
+        height: 200px;
+        border-radius: 100px;
+        bottom: 10px;
+        right: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
+    }
+
+    .solace2 {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        
+    }
+
+    .solace2 img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+
+    .solace2 p {
+        font-family: 'Courier New', Courier, monospace;
+        text-align: left;
+        line-height: 1.8;
+        padding: 1rem;
+        background-color: #f9f9f9;
+    
+    }
+
+
+</style>
+
+<div>
+    <div class="solace">
+        <h1> Welcome to Accra Central View Hotel!</h1>
+        <p>Experience Luxury at its best.</p>
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.9527176484485!2d-0.20954552409741806!3d5.574009294406603!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfdf9a12e86ca293%3A0x54a1f6174ebc5056!2sAccra%20Central%20View%20Hotel!5e0!3m2!1sen!2sgh!4v1738698135515!5m2!1sen!2sgh" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            
+        </div>
+    </div>
+<hr>
+    <div class="solace2">
+        <div style="width: 50%; text-align: center;" class="block">
+            <img src="{% static 'images/outside2.JPG' %}" alt="">
+            <p>
+                Welcome to our modern hotel, a masterpiece of contemporary design and luxury. 
+                Nestled in the heart of the city, our hotel boasts sleek architecture, spacious rooms, and an array of amenities to cater to your every need.
+                With a rooftop bar, very fine dining restaurant serving local and international dishes, every detail is crafted to provide an unforgettable experience. 
+                Whether you're here for business or leisure, our vibrant atmosphere, cutting-edge facilities, and impeccable service ensure your stay is nothing short of exceptional.
+                We understand that accessibility can be a concern for some of our guests. Rest assured that our hotel is equipped with a lift, providing easy access to all floors and ensuring a comfortable stay for everyone.
+            </p>
+        </div>
+        <div style="width: 50%; text-align: center;" class="block">
+            <img src="{% static 'images/ariel.JPG' %}" alt="">
+            <p>
+                Here is an aerial view of the hotel surrounded by nice buildings and a sparkling lights in the evenings.
+                It showcases modern architecture, stunning views, and a bright, inviting atmosphere.
+            </p>
+        </div>
+    </div>
+<hr>    
+</div>
+
+
+
+{% endblock %}

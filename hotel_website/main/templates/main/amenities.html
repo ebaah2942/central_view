@@ -1,0 +1,186 @@
+
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Amenities{% endblock %}
+
+{% block content %}
+<style>
+    .solace4 {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .solace4 h2 {
+        background-color: #f7f7f7;
+        margin-top: 1rem;
+        font-size: 1.1rem;
+        color: #555;
+        text-align: left;
+        border-left: 4px solid #00BFFF;
+
+    }
+
+    .solace4 img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+
+    .solace4 p {
+        font-family: 'Courier New', Courier, monospace;
+        text-align: left;
+        line-height: 1.8;
+        padding: 1rem;
+        background-color: #f9f9f9;
+    }
+
+    .solace5 {
+        width: 50%;
+        text-align: center;
+    }
+
+    .solace5 img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+
+    .solace5 p {
+        font-family: 'Courier New', Courier, monospace;
+        text-align: left;
+        line-height: 1.8;
+        padding: 1rem;
+        background-color: #f9f9f9;
+    }
+
+    .solace5 h2 {
+        background-color: #f7f7f7;
+        margin-top: 1rem;
+        font-size: 1.1rem;
+        color: #555;
+        text-align: left;
+        border-left: 4px solid #00BFFF;
+    }
+
+    .solace6 {
+        align-items: center;
+        display: flex;
+        gap: 1rem; 
+        margin: 2rem 0;
+        
+    }
+
+    .solace6 img {
+        width: 40%;  
+        height: 150px; 
+        border-radius: 8px;
+    }
+
+    .solace6 p {
+        font-family: 'Courier New', Courier, monospace;
+        text-align: left;
+        line-height: 1.8;
+        padding: 1rem;
+        background-color: #f9f9f9;
+    }
+
+    .solace7 {
+        align-items: center; 
+        display: flex; 
+        gap: 1rem; 
+        margin: 2rem 0;
+    }
+
+    .solace7 img {
+        width: 40%;  
+        height: auto; 
+        border-radius: 8px; 
+        align-items: end;
+    }
+
+    .solace7 p {
+        font-weight: bold; 
+        font-family: 'Courier New', Courier, monospace; 
+        text-align: left; 
+        line-height: 1.8;  
+        padding: 1rem;  
+        background-color: #f9f9f9;
+    }
+
+    .solace8 {
+        align-items: center;
+    }
+
+    .solace8 p {
+        font-family: 'Courier New', Courier, monospace; 
+        line-height: 1.8;  
+        padding: 1rem;  
+        background-color: #f9f9f9; 
+        text-align: left; 
+        max-width: 800px;
+    }
+
+
+
+
+</style>
+<h1 style="text-align: center; font-weight: bold; font-family: 'Montserrat', serif;">Amenities</h1>
+<div class="solace4" class="container">
+    <div style="width: 50%; text-align: center;" class="block">
+        <h2>Restaurant</h2>
+        <img src="{% static 'images/res3.JPG' %}" alt="">
+        <p>
+            Indulge in a culinary journey at our restaurant, where every meal is a masterful blend of local and international flavors. 
+            Start your day with a delicious breakfast, available for a nominal fee, and enjoy a selection of freshly prepared dishes crafted from the finest ingredients.
+            Our lunch and dinner menus offer a range of exquisite options, from hearty favorites to innovative creations. Our attentive staff is dedicated to providing an exceptional dining experience that will leave you feeling satisfied and eager to return.
+        </p>
+    </div>
+    <div class="solace5" class="block">
+        <h2>Car Park</h2>
+        <img src="{% static 'images/park.JPG' %}" alt="">
+        <p>Convenient and Secure Parking:
+            Enjoy peace of mind with our spacious and secure car park, 
+            designed to cater to all your parking needs. 
+            Located conveniently near the hotel entrance, 
+            our well-lit parking area ensures easy access for guests, with ample space for vehicles of all sizes. 
+            With 24/7 surveillance and dedicated staff, we prioritize the safety of your vehicle while you focus on relaxing and enjoying your stay.
+            Whether you're here for a short visit or an extended stay, parking has never been more hassle-free.
+            </p>
+    </div>
+  
+</div>
+<hr>
+<div class="container">
+    <div class="solace6" class="block">
+        <img src="{% static 'images/wifi.svg' %}" alt="">
+        <p> Stay connected with our paid high-speed Wi-Fi, available throughout the premises. 
+            Whether you're catching up on work, streaming your favorite shows, or staying in touch with loved ones, our reliable internet ensures you're always connected.
+        </p>
+</div>
+
+</div>
+<hr>
+<div class="solace7" class="block">
+    <img src="{% static 'images/bar1.JPG' %}" alt="bar1">
+    <p>OPENING HOURS: Tues - Sun from 4PM - 11PM, Contacts: +233 59 433  2382 for bookings</p> 
+    <p></p> 
+    <img style="width: 40%;  height: auto; border-radius: 8px; margin-top: 150px;" src="{% static 'images/bar7.JPG' %}" alt="bar2">
+    
+</div>
+<div class="solace8" class="container">
+    <p> Experience the ultimate relaxation at our stunning rooftop bar, open daily from 4 PM to 11 PM, except on Mondays. Immerse yourself in the cool breeze and chill vibes with soothing music that sets the perfect ambiance. Whether you're unwinding after a long day or celebrating a special occasion, our rooftop bar is the ideal venue. Available for rentals, it’s the perfect spot to host birthdays, weddings, corporate events, and more.There's a elevator to the top floor. Contacts: +233 59 433  2382 for bookings</p>
+
+</div>
+<hr>
+
+</div>
+{% for amenity in amenities %}
+<div>
+    <h2>{{ amenity.name }}</h2>
+    <p>{{ amenity.description }}</p>
+</div>
+{% endfor %}
+
+{% endblock %}

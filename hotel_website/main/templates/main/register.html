@@ -1,0 +1,54 @@
+
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="container mt-3" style="text-align: center; margin: 2rem auto; max-width: 400px; font-family: 'Montserrat', serif;">
+    <h1 class="text-center mb-4">Register</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-primary w-100" style="background-color: #007bff; color: white; padding: 0.75rem 2rem; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; animation: pulse 2s infinite;" type="submit">Register</button>
+              </form>   
+        </div>
+        <div>
+            <p style="text-align: center; margin-top: 1rem; ">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+        </div>
+    </div>
+</div>
+<style>
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+  
+    @keyframes slideUp {
+      0% {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+  </style>
+
+{% endblock %}
