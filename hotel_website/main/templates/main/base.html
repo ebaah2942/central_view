@@ -12,6 +12,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
   <style>
     /* General Styling */
@@ -110,6 +112,7 @@
   </style>
 </head>
 <body>
+
   <div class="container">
     <!-- Navbar -->
     {% if not hide_nav %}
@@ -121,7 +124,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
-            <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}"><i class="fas fa-home"></i></a></li>
+            <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Home</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'rooms' %}">Rooms</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'amenities' %}">Amenities</a></li>
           </ul> 
@@ -145,13 +148,56 @@
     </nav>
     {% endif %}
 
+  {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+  {% endif %}
+
+  
+  
     <!-- Main Content -->
     <div class="content">
       <main>
-        {% block content %}{% endblock %}
+        {% block content %}
+         
+        {% endblock %}
       </main>
     </div>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      setTimeout(function () {
+        let alerts = document.querySelectorAll(".alert");
+        alerts.forEach(alert => {
+          alert.style.transition = "opacity 0.5s ease";
+          alert.style.opacity = "0";
+          setTimeout(() => alert.remove(), 500); // Removes the element completely
+        });
+      }, 3000); // Message disappears after 3 seconds
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        if (!localStorage.getItem("cookiesAccepted")) {
+            Swal.fire({
+                title: "Cookies & Privacy",
+                text: "We use cookies to ensure you get the best experience on our website.",
+                icon: "info",
+                confirmButtonText: "Accept",
+                footer: '<a href="{% url "privacy_policy" %}">Learn more</a>'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.setItem("cookiesAccepted", true);
+                }
+            });
+        }
+    });
+
+
+  </script>
 
   <!-- Footer -->
   <footer class="footer">

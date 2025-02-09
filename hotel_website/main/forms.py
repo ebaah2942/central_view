@@ -3,25 +3,12 @@ from .models import Booking, CustomUser, Room
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 
-# class BookingForm(forms.ModelForm):
-#     room_types = forms.ModelMultipleChoiceField(
-#         queryset=Room.objects.all(),
-#         widget=forms.CheckboxSelectMultiple,
 
-#     )
-
-#     quantities = forms.CharField(
-#         widget=forms.HiddenInput()
-#     )
-
-#     class Meta:
-#         model = Booking
-#         fields = ['check_in', 'check_out']
 
 class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
-        fields = ('check_in', 'check_out', 'quantity', 'room')
+        fields = ('check_in', 'check_out', 'quantity')
 
     check_in = forms.DateField(
         widget=forms.DateInput(
@@ -39,27 +26,6 @@ class BookingForm(forms.ModelForm):
             }
         )
     )
-
-
-
-
-# class RoomSelectionForm(forms.Form):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         room_types = Room.objects.all()
-#         for room_type in room_types:
-#             field_name = f"quantity_{room_type.id}"
-#             self.fields[field_name] = forms.IntegerField(label=f"{room_type.name} Quantity", required=False)
-
-#     def clean(self):
-#         cleaned_data = super().clean()
-#         for field_name, value in cleaned_data.items():
-#             if field_name.startswith("quantity_") and value:
-#                 room_type_id = int(field_name.split("_")[1])
-#                 room_type = Room.objects.get(id=room_type_id)
-#                 if value < 1:
-#                     self.add_error(field_name, "Quantity must be a positive integer")
-#         return cleaned_data
 
 
 class CustomUserCreationForm(forms.ModelForm):

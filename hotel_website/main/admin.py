@@ -18,8 +18,13 @@ class CustomUserAdmin(UserAdmin):
         }),
     )
 
+class BookingAdmin(admin.ModelAdmin):
+    list_display = ('user', 'room', 'check_in', 'check_out')
+    search_fields = ('user__username', 'room__name')
+    list_filter = ['check_in']    
+
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Room)
 admin.site.register(Amenity)
-admin.site.register(Booking)
+admin.site.register(Booking, BookingAdmin)
 

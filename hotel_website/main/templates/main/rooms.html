@@ -7,12 +7,12 @@
 {% block content %}
 
 
-<h1 style="padding: 20px; text-align: center; font-weight: bold; font-family: 'Montserrat', serif;">Welcome to Our Elegant Rooms</h1>
+<h1 class="room2">Welcome to Our Elegant Rooms</h1>
 {% for room in rooms %}
-<div style="padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); background-color: #f2f2f2;">
+<div class="room">
     
-    <h2 style="font-family: 'Montserrat', serif; font-weight: bold;">{{ room.name }}</h2>
-    <p style="text-align: left; line-height: 1.8;  padding: 1rem;  background-color: #f9f9f9; font-family: 'Montserrat', serif;">{{ room.description }}</p>
+    <h2 class="room3">{{ room.name }}</h2>
+    <p class="room4">{{ room.description }}</p>
 
     <!-- Carousel -->
     <div id="roomCarousel{{ forloop.counter }}" class="carousel slide" data-bs-ride="carousel">
@@ -71,7 +71,7 @@
     </div>
 
     <!-- Room Details -->
-    <p style="text-align: left; line-height: 1.8;  padding: 1rem;  background-color: #f9f9f9; margin-top: 1rem; font-family: 'Montserrat', serif;">Price: GHS {{ room.price }}</p>
+    <p class="price">Price: GHS {{ room.price }}</p>
     {% if room.image %}
         <img src="{{ room.image.url }}" alt="{{ room.name }}" style="max-width: 100%; height: auto;">
     {% else %}
@@ -80,7 +80,7 @@
 
     <!-- Booking Button -->
     {% if user.is_authenticated %}
-        <a style="background-color: #007bff; color: white; padding: 0.75rem 2rem; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; animation: pulse 2s infinite;" class="btn btn-primary" href="{% url 'book_room' room.id %}">Book Now</a>
+        <a class="book" class="btn btn-primary" href="{% url 'book_room' room.id %}">Book Now</a>
     {% else %}
         <a class="btn btn-secondary" href="{% url 'login' %}">Login to Book</a>
     {% endif %}
@@ -88,6 +88,48 @@
 <hr>
 {% endfor %}
 <style>
+    .room4 {
+        text-align: left; 
+        line-height: 1.8;  
+        padding: 1rem;  
+        background-color: #f9f9f9; 
+        font-family: 'Montserrat', serif, sans-serif;
+    }
+    .room3 {
+        font-family: 'Montserrat', serif, sans-serif; 
+        font-weight: bold;
+    }
+    .room2 {
+        padding: 20px; 
+        text-align: center; 
+        font-weight: bold; 
+        font-family: 'Montserrat', serif;
+    }
+    .room {
+        padding: 20px; 
+        border-radius: 20px; 
+        text-align: center; 
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); 
+        background-color: #f2f2f2;
+    }
+    .price {
+        text-align: left; 
+        line-height: 1.8;  
+        padding: 1rem;  
+        background-color: #f9f9f9; 
+        margin-top: 1rem; 
+        font-family: 'Montserrat', serif;  
+    }
+    .book {
+        background-color: #007bff; 
+        color: white; 
+        padding: 0.75rem 2rem; 
+        font-size: 16px; 
+        border: none; 
+        border-radius: 5px; 
+        cursor: pointer; 
+        animation: pulse 2s infinite; 
+    }
     @keyframes fadeIn {
       0% {
         opacity: 0;

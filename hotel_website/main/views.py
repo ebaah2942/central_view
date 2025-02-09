@@ -18,6 +18,9 @@ from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, 
 def home(request):
     return render(request, 'main/home.html')
 
+def privacy_policy(request):
+    return render(request, 'main/privacy.html')
+
 
 def rooms(request):
     all_rooms = Room.objects.all().order_by('price')
@@ -74,6 +77,7 @@ def delete_booking(request, booking_id):
         try:
             booking.delete()
             messages.success(request, "Booking deleted successfully")
+            print(list(messages.get_messages(request)))
             return redirect('booking_list')
         except Exception as e:
             messages.error(request, f"Error deleting booking: {str(e)}")
@@ -88,30 +92,42 @@ def booking_list(request):
     user = request.user
     name = user.username
     phone_number = user.phone_number
-    bookings = Booking.objects.filter(user=request.user)
+    bookings = Booking.objects.filter(user=request.user).order_by('-check_in')
     paginator = Paginator(bookings, 10)  # Show 10 bookings per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     for booking in bookings:
         booking.num_of_day = (booking.check_out - booking.check_in).days
         booking.total_price = booking.room.price * booking.num_of_day
+        booking.grand_total = booking.total_price * booking.quantity
     return render(request, 'main/my_booking.html', {'bookings': bookings, 'name': name, 'phone_number': phone_number, 'page_obj': page_obj}) 
 
 
 @login_required
 def book_room(request, room_id):
     room = Room.objects.get(id=room_id)
+    available_rooms = Room.objects.all()
     if request.method == 'POST':
         form = BookingForm(request.POST)
         if form.is_valid():
-            booking = form.save(commit=False)
-            booking.user = request.user
-            booking.room = room
-            booking.save()
-            return redirect('booking_list')
+            quantity = form.cleaned_data.get('quantity')
+            if room.name in ['King-Size', 'Double-Room'] and quantity > 8:
+                messages.error(request, "You cannot book more than 8 King-size or Double rooms.")
+            elif room.name == 'Single-Room' and quantity > 20:
+                messages.error(request, "You cannot book more than 20 Single rooms.")    
+            elif quantity and quantity > 0:
+                booking = form.save(commit=False)
+                booking.user = request.user
+                selected_room = request.POST.get('selected_room')
+                booking.room = Room.objects.get(id=selected_room)
+                booking.save()
+                messages.success(request, f'Booking successful for {quantity} {room.name}')
+                return redirect('booking_list')
+            else:
+                messages.error(request, "Quantity must be greater than 0.")
     else:
         form = BookingForm()
-    return render(request, 'main/booking.html', {'room': room, 'form': form})
+    return render(request, 'main/booking.html', {'room': room, 'form': form, 'available_rooms': available_rooms})
 
 @login_required
 def update_booking(request, booking_id):

@@ -5,6 +5,20 @@
 {% block title %}My Bookings{% endblock %}
 
 {% block content %}
+<script>
+    function confirmDelete() {
+        return confirm("Are you sure you want to delete this booking?");
+    }
+</script>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+
 <h1>My Bookings</h1>
 <hr>
 
@@ -18,14 +32,14 @@
             <p>Check-out: {{ booking.check_out }}</p>
             <p>Price per day: GHS {{ booking.room.price }}</p>
             <p>Number of days: {{ booking.num_of_day }}</p>
-            <p>Total Price: GHS {{ booking.total_price }}</p>
             <p>Quantity: {{ booking.quantity }}</p>
+            <p>Total Price: GHS {{ booking.grand_total }}</p>
             <p style="color: red; font-weight: bold; font-style: italic;">Kindly call to confirm availability and make payment: <i class="fa-solid fa-phone"></i>+233 59 433 2382</p> 
             <p>Do you want to add another booking? <a style="text-decoration: none;" href="{% url 'book_room' room_id=booking.room.id %}"><i class="fas fa-plus"></i> Book Now</a></p> 
             <a href="{% url 'update_booking' booking.id %}" class="btn btn-warning"><i class="fas fa-edit"></i> Edit Booking</a>
-            <form action="{% url 'delete_booking' booking.id %}" method="post" style="display:inline;">
+            <form action="{% url 'delete_booking' booking.id %}" method="post" onsubmit="return confirmDelete()" style="display:inline;">
                 {% csrf_token %}
-                <button class=" btn btn-danger" type="submit"><i class="fas fa-trash"></i> Delete</button>
+                <button class=" btn btn-danger" type="submit" onclick="confirmDelete(event, '{{ booking.id }}')"><i class="fas fa-trash"></i> Delete</button>
             </form>  
         </div>
         <hr>
@@ -51,5 +65,51 @@
     
 }
 </style>
+<script>
+    function confirmDelete(event, bookingId) {
+        event.preventDefault(); // Prevent default form submission
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to undo this action!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If confirmed, submit the form
+                let form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/delete_booking/${bookingId}/`;
+
+                // Add CSRF token
+                let csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = 'csrfmiddlewaretoken';
+                csrfToken.value = '{{ csrf_token }}';
+
+                form.appendChild(csrfToken);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+    }
+    
+  document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(function () {
+      let alerts = document.querySelectorAll(".alert");
+      alerts.forEach(alert => {
+        alert.style.transition = "opacity 0.5s ease";
+        alert.style.opacity = "0";
+        setTimeout(() => alert.remove(), 500); // Removes the element completely
+      });
+    }, 3000); // Message disappears after 3 seconds
+  });
+
+
+</script>
+
 
 {% endblock %}

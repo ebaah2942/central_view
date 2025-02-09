@@ -5,22 +5,52 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
-<div class="container mt-3" style="text-align: center; margin: 2rem auto; max-width: 400px; font-family: 'Montserrat', serif;">
+<div class="container mt-3">
+  {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+  {% endif %}
+
     <h1 class="text-center mb-4">Register</h1>
     <div class="row justify-content-center">
         <div class="col-md-6">
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button class="btn btn-primary w-100" style="background-color: #007bff; color: white; padding: 0.75rem 2rem; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; animation: pulse 2s infinite;" type="submit">Register</button>
+                <button class="btn btn-primary w-100" type="submit">Register</button>
               </form>   
         </div>
         <div>
-            <p style="text-align: center; margin-top: 1rem; ">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+            <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
         </div>
     </div>
 </div>
 <style>
+  p {
+    text-align: center; 
+    margin-top: 1rem;
+  }
+
+  button {
+    background-color: #007bff; 
+    color: white; 
+    padding: 0.75rem 2rem; 
+    font-size: 16px; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    animation: pulse 2s infinite;
+  }
+  .container {
+    text-align: center; 
+    margin: 2rem auto; 
+    max-width: 400px; 
+    font-family: 'Montserrat', serif, sans-serif;
+  }
+
     @keyframes fadeIn {
       0% {
         opacity: 0;

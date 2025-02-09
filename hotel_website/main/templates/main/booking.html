@@ -5,13 +5,27 @@
 {% block title %}Book Room{% endblock %}
 
 {% block content %}
-<div class="container mt-3">
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+ <div class="container mt-3">
   <h1 class="text-center mb-4">Book Room</h1>
+  
   <div class="row justify-content-center">
       <div class="col-md-6">
           <form action="{% url 'book_room' room_id=room.id %}" method="POST">
               {% csrf_token %}
-              
+              <label>Select Room Type:</label>
+              <select name="selected_room" class="form-control">
+                  {% for room in available_rooms %}
+                      <option value="{{ room.id }}">{{ room.name }} - GHS {{ room.price }}</option>
+                  {% endfor %}
+              </select>
               <!-- Render the form fields with Bootstrap styling -->
               <div class="form-group mb-3">
                   {{ form.as_p }}
@@ -25,7 +39,46 @@
 </div>
 
 
-
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const checkboxes = document.querySelectorAll(".room-checkbox");
+      const submitBtn = document.getElementById("submit-btn");
+      const warningText = document.getElementById("room-warning");
+  
+      function validateRooms() {
+          let totalRooms = 0;
+  
+          checkboxes.forEach(checkbox => {
+              if (checkbox.checked) {
+                  let roomType = checkbox.getAttribute("data-room-type");
+                  let quantityInput = document.querySelector(`input[name='quantity_${checkbox.value}']`);
+                  let quantity = parseInt(quantityInput.value) || 0;
+  
+                  if (roomType === "King-Size" || roomType === "Double-Room") {
+                      totalRooms += quantity;
+                  }
+              }
+          });
+  
+          if (totalRooms > 8) {
+              warningText.style.display = "block";
+              submitBtn.disabled = true;
+          } else {
+              warningText.style.display = "none";
+              submitBtn.disabled = false;
+          }
+      }
+  
+      checkboxes.forEach(checkbox => {
+          checkbox.addEventListener("change", validateRooms);
+      });
+  
+      document.querySelectorAll(".quantity-input").forEach(input => {
+          input.addEventListener("input", validateRooms);
+      });
+  });
+  </script>
+  
 
 <style>
     @keyframes fadeIn {
