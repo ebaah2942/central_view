@@ -133,9 +133,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STATIC_URL = '/static/'
-
-
 LOGIN_REDIRECT_URL = '/'  # Redirect to home page after login
 LOGIN_URL = 'password-reset/'
 # LOGIN_URL = '/login/'    # Default login URL
@@ -169,6 +166,8 @@ AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles") 
 
 
 MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
