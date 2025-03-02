@@ -1,0 +1,44 @@
+
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Book Room{% endblock %}
+
+{% block content %}
+<h2>Archived Notifications</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Message</th>
+            <th>Recipient</th>
+            <th>Unarchive</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for notification in archived_notifications %}
+        <tr>
+            <td>{{ notification.message }}</td>
+            <td>{{ notification.recipient.username }}</td>
+
+            <!-- Unarchive Button -->
+            <td style="text-align: center;">
+                <form action="{% url 'unarchive_notification' notification.id %}" method="POST">
+                    {% csrf_token %}
+                    <button style="background: none; border: none;" type="submit">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3" style="text-align: center;">No archived notifications</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+
+{% endblock %}

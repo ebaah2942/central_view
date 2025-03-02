@@ -1,7 +1,8 @@
 from django import forms
-from .models import Booking, CustomUser, Room
+from .models import Booking, CustomUser, Room, Inquiry
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 
 
 
@@ -59,3 +60,38 @@ class CustomUserCreationForm(forms.ModelForm):
 class CustomLoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Username'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
+
+
+class InquiryForm(forms.ModelForm):
+    class Meta:
+        model = Inquiry
+        fields = ['subject', 'message']
+        widgets = {
+            'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}),
+            'message': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Write your message here...'})
+        }
+
+class ResponseForm(forms.ModelForm):
+    class Meta:
+        model = Inquiry
+        fields = ['response']
+        widgets = {
+            'response': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Write your response here...'})
+        }  
+
+class UserUpdateForm(UserChangeForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'phone_number', 'address', 'email', 'first_name', 'last_name']
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'password' in self.fields:
+            del self.fields['password'] 
+
+
+
+class ChangePasswordForm(PasswordChangeForm):
+    class Meta:
+        model = CustomUser
+        fields = ["old_password", "new_password1", "new_password2"]
+                  

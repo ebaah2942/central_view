@@ -15,6 +15,7 @@ import os
 import dj_database_url
 from django.contrib.messages import constants as messages
 from dotenv import load_dotenv
+from django.urls import reverse_lazy
 
 load_dotenv()
 
@@ -37,6 +38,7 @@ ALLOWED_HOSTS = ["central-view-hotel.onrender.com", "localhost", "127.0.0.1"]
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +48,8 @@ INSTALLED_APPS = [
     'main.apps.MainConfig',
     'django_extensions',
     'storages',
+    'channels',
+    
 ]
 
 
@@ -78,7 +82,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'hotel_website.wsgi.application'
+ASGI_APPLICATION = 'hotel_website.asgi.application'
 
 
 # Database
@@ -133,23 +137,17 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = '/'  # Redirect to home page after login
+LOGIN_REDIRECT_URL = '/reception-dashboard/'  # Redirect to receptionist dashboard
+ # Redirect to home page after login
 LOGIN_URL = 'password-reset/'
 # LOGIN_URL = '/login/'    # Default login URL
-LOGOUT_REDIRECT_URL = 'login'  # Redirect to login page after logout
+LOGOUT_REDIRECT_URL = '/login/'  # Redirect to login page after logout
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-SITE_NAME = 'Accra Central View Hotel'
 
-PERMISSIONS = {
-    'booking': {
-        'can_book_room': 'Can book a room',
-        'can_view_bookings': 'Can view bookings',
-    }
-}
 MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -172,5 +170,16 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 
 MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.getenv("REDIS_URL")],  # Use Upstash Redis
+            
+        },
+    },
+}
+
 
 

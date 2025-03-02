@@ -87,17 +87,23 @@
     }
 
     .solace7 {
-        align-items: center; 
-        display: flex; 
-        gap: 1rem; 
-        margin: 2rem 0;
+        display: flex;
+        justify-content: center; /* Centers image horizontally */
+        align-items: center; /* Centers image vertically if needed */
+        width: 100%;
+        gap: 1rem;
+        
+
+        
     }
 
     .solace7 img {
-        width: 40%;  
-        height: auto; 
-        border-radius: 8px; 
-        align-items: end;
+        max-width: 100%; /* Ensures image scales down on smaller screens */
+        width: 40vw; /* Makes width relative to the viewport */
+        height: auto; /* Maintains aspect ratio */
+        border-radius: 8px;
+        
+        
     }
 
     .solace7 p {
@@ -122,6 +128,27 @@
         max-width: 800px;
     }
 
+    .read-more-btn {
+        display: block; 
+        background-color: #130f0f;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-top: 5px;
+}
+
+.full-text {
+    display: none; /* Hidden by default */
+    margin-top: 10px; /* Add spacing so it doesn’t overlap */
+}
+
+.read-more-btn:hover {
+    background-color: #0056b3;
+}
+
+
 
 
 
@@ -129,25 +156,31 @@
 <h1 style="text-align: center; font-weight: bold; font-family: 'Montserrat', serif;">Amenities</h1>
 <div class="solace4" class="container">
     <div style="width: 50%; text-align: center;" class="block">
-        <h2>Restaurant</h2>
         <img src="https://myacvhbucket.s3.eu-north-1.amazonaws.com/acvh_latest/res3.jpg" alt="restaurant">
-        <p>
-            Indulge in a culinary journey at our restaurant, where every meal is a masterful blend of local and international flavors. 
-            Start your day with a delicious breakfast, available for a nominal fee, and enjoy a selection of freshly prepared dishes crafted from the finest ingredients.
-            Our lunch and dinner menus offer a range of exquisite options, from hearty favorites to innovative creations. Our attentive staff is dedicated to providing an exceptional dining experience that will leave you feeling satisfied and eager to return.
-        </p>
+        <div class="description">
+            <p class="short-text">
+                Indulge in an excellent dining experience at our restaurant, where every meal is a delight.
+            </p>
+            <p class="full-text" style="display: none;">
+                Start your day with a delicious breakfast, available for a nominal fee, and enjoy a selection 
+                of freshly prepared dishes for lunch and dinner. Our staff is dedicated to providing an 
+                exceptional dining experience that will leave you feeling satisfied and eager to return.
+            </p>
+            <button class="read-more-btn">Read More..</button>
+        </div>
     </div>
     <div class="solace5" class="block">
-        <h2>Car Park</h2>
         <img src="https://myacvhbucket.s3.eu-north-1.amazonaws.com/acvh_latest/park.jpg" alt="car park">
-        <p>Convenient and Secure Parking:
-            Enjoy peace of mind with our spacious and secure car park, 
-            designed to cater to all your parking needs. 
-            Located conveniently near the hotel entrance, 
-            our well-lit parking area ensures easy access for guests, with ample space for vehicles of all sizes. 
-            With 24/7 surveillance and dedicated staff, we prioritize the safety of your vehicle while you focus on relaxing and enjoying your stay.
-            Whether you're here for a short visit or an extended stay, parking has never been more hassle-free.
+        <div class="description">
+            <p class="short-text">
+                Enjoy peace of mind with our spacious and secure car park, conveniently located near the entrance.
             </p>
+            <p class="full-text" style="display: none;">
+                Our well-lit parking area ensures easy access for guests. 
+                With 24/7 surveillance and dedicated staff, we prioritize the safety of your vehicle while you focus on relaxing and enjoying your stay.
+            </p>
+            <button class="read-more-btn">Read More..</button>
+        </div>
     </div>
   
 </div>
@@ -163,14 +196,18 @@
 </div>
 <hr>
 <div class="solace7" class="block">
-    <img src="https://myacvhbucket.s3.eu-north-1.amazonaws.com/acvh_latest/bar1.JPG" alt="bar1">
-    <p>OPENING HOURS: Tues - Sun from 4PM - 11PM, Contacts: +233 59 433  2382 for bookings</p> 
-    <p></p> 
-    <img style="width: 40%;  height: auto; border-radius: 8px; margin-top: 150px;" src="https://myacvhbucket.s3.eu-north-1.amazonaws.com/acvh_latest/bar7.JPG" alt="bar2">
+    <img src="https://myacvhbucket.s3.eu-north-1.amazonaws.com/acvh_latest/bar1.JPG" alt="bar1"> 
+    <img src="https://myacvhbucket.s3.eu-north-1.amazonaws.com/acvh_latest/bar7.JPG" alt="bar2">
     
 </div>
 <div class="solace8" class="container">
-    <p> Experience the ultimate relaxation at our stunning rooftop bar, open daily from 4 PM to 11 PM, except on Mondays. Immerse yourself in the cool breeze and chill vibes with soothing music that sets the perfect ambiance. Whether you're unwinding after a long day or celebrating a special occasion, our rooftop bar is the ideal venue. Available for rentals, it’s the perfect spot to host birthdays, weddings, corporate events, and more.There's a elevator to the top floor. Contacts: +233 59 433  2382 for bookings</p>
+    <p> 
+        Experience the ultimate relaxation at our stunning rooftop bar, open daily from 4 PM to 11 PM, except on Mondays. 
+        Immerse yourself in the cool breeze and enjoy the perfect ambiance.  
+        Available for rentals, it’s the perfect spot to host birthdays, and weddings.
+        There's a elevator to the top floor. Contacts: +233 59 433  2382 / +233 30  223  1759 for bookings.
+    </p>
+    <p style="text-align: center; font-style: italic; font-weight: bold; font-size: 15px">OPENING HOURS: Tues - Sun from 4PM - 11PM</p>
 
 </div>
 <hr>
@@ -183,5 +220,27 @@
 </div>
 
 {% endfor %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".read-more-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const description = this.parentElement;
+                const shortText = description.querySelector(".short-text");
+                const fullText = description.querySelector(".full-text");
+    
+                if (fullText.style.display === "none") {
+                    fullText.style.display = "block";  // Ensure full text appears properly
+                    shortText.style.display = "none";  // Hide short text
+                    this.textContent = "Read Less";
+                } else {
+                    fullText.style.display = "none";
+                    shortText.style.display = "block";
+                    this.textContent = "Read More";
+                }
+            });
+        });
+    });
+    </script>
+    
 
 {% endblock %}

@@ -5,27 +5,24 @@
 {% block title %}Book Room{% endblock %}
 
 {% block content %}
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            {{ message }}
-        </div>
-    {% endfor %}
-{% endif %}
 
- <div class="container mt-3">
-  <h1 class="text-center mb-4">Book Room</h1>
+
+ <div  class="container mt-3">
+  <h1 style="text-align: center; font-weight: bold; font-family: 'Montserrat', serif;" class="text-center mb-4">Book Room</h1>
   
-  <div class="row justify-content-center">
+  
+  <div style="display: flex; justify-content: center; padding: 50px; background-color: #f2f2f2; align-items: center; margin-bottom: 20px; font-family: 'Montserrat', serif; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" class="row justify-content-center">
       <div class="col-md-6">
           <form action="{% url 'book_room' room_id=room.id %}" method="POST">
               {% csrf_token %}
-              <label>Select Room Type:</label>
-              <select name="selected_room" class="form-control">
-                  {% for room in available_rooms %}
-                      <option value="{{ room.id }}">{{ room.name }} - GHS {{ room.price }}</option>
-                  {% endfor %}
-              </select>
+              {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+              {% endif %}
+              <h2>Selected Room: {{ room.name }}</h2>
               <!-- Render the form fields with Bootstrap styling -->
               <div class="form-group mb-3">
                   {{ form.as_p }}

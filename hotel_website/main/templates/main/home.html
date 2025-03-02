@@ -14,6 +14,7 @@
         margin-top: 0;
         padding: 100px 0;
         position: relative;
+        border-radius: 10px;
 
     }
     .solace h1 {
@@ -29,7 +30,7 @@
         font-weight: bold;
         
     }
-    iframe {
+    /* iframe {
         width: 200px;
         position: absolute;
         height: 200px;
@@ -38,7 +39,7 @@
         right: 10px;
         overflow: hidden;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
-    }
+    } */
 
     .solace2 {
         display: flex;
@@ -65,6 +66,67 @@
    top: auto;
 }
 
+.oboy {
+    display: inline-block; 
+    background: linear-gradient(90deg, #1abc9c, #3498db);
+    color: #eeeff4; 
+    padding: 12px 24px;
+    font-size: 16px; 
+    font-weight: bold; 
+    text-decoration: none; border-radius: 5px; 
+    transition: background-color 0.3s ease;
+}
+
+.video-section {
+    position: relative;
+    width: 100%;
+    height: 400px; /* Adjust height as needed */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-section video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-section .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Dark overlay */
+}
+
+.video-section .content {
+    position: relative;
+    text-align: center;
+    color: white;
+    z-index: 2;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.video-section .btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #f04e30;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    border-radius: 5px;
+}
+
+
+
 </style>
 {% if messages %}
     {% for message in messages %}
@@ -73,27 +135,35 @@
         </div>
     {% endfor %}
 {% endif %}
+{% if user.is_authenticated %}
+    {% if user_role|lower == "guest" %}
+        <div style="background-color: aliceblue; padding: 20px; border-radius: 10px;">
+            <h1>Welcome, {{ user.username }}!</h1>
+            {% if room %}
+                <a href="{% url 'rooms' %}" class="btn btn-primary">Book Now</a> <span><a class="btn btn-primary" href="{% url 'send_inquiry' %}">Send Inquiry</a></span>
+            {% endif %}
+        </div>
+    {% elif user_role|lower in "manager receptionist" %}
+        <div style="background-color: aliceblue; padding: 20px; border-radius: 10px;">
+            <h2>Welcome, {{ user.username }}!</h2>
+            <a href="{% url 'reception_dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
+        </div>
+    {% endif %}
+{% endif %}
 
-
-<div class="setup">
+    <hr>
     <div class="solace">
         <h1> Welcome to Accra Central View Hotel!</h1>
         <p>Experience Luxury at its best.</p>
-        <div class="map-container">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.9527176484485!2d-0.20954552409741806!3d5.574009294406603!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfdf9a12e86ca293%3A0x54a1f6174ebc5056!2sAccra%20Central%20View%20Hotel!5e0!3m2!1sen!2sgh!4v1738698135515!5m2!1sen!2sgh" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            
-        </div>
     </div>
 <hr>
     <div class="solace2">
         <div style="width: 50%; text-align: center;" class="block">
             <img src="https://myacvhbucket.s3.eu-north-1.amazonaws.com/acvh_latest/outside2.JPG" alt="Outside">
             <p>
-                Welcome to our modern hotel, a masterpiece of contemporary design and luxury. 
-                Nestled in the heart of the city, our hotel boasts sleek architecture, spacious rooms, and an array of amenities to cater to your every need.
-                With a rooftop bar, very fine dining restaurant serving local and international dishes, every detail is crafted to provide an unforgettable experience. 
-                Whether you're here for business or leisure, our vibrant atmosphere, cutting-edge facilities, and impeccable service ensure your stay is nothing short of exceptional.
-                We understand that accessibility can be a concern for some of our guests. Rest assured that our hotel is equipped with a lift, providing easy access to all floors and ensuring a comfortable stay for everyone.
+                Welcome to our modern hotel, nestled in the heart of the city, spacious rooms, and an array of amenities to cater to your every need.
+                With a rooftop bar, very fine dining restaurant serving local and international dishes.
+                Rest assured that our hotel is equipped with a lift, providing easy access to all floors.
             </p>
         </div>
         <div style="width: 50%; text-align: center;" class="block">
@@ -104,8 +174,25 @@
             </p>
         </div>
     </div>
-<hr>    
+<hr>
+<div class="video-section">
+    <video autoplay muted loop playsinline>
+        <source src="https://myacvhbucket.s3.eu-north-1.amazonaws.com/rooftopbar.mov" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="overlay"></div>
+    <div class="content">
+        <h1>Welcome to Our RoofTop Bar</h1>
+        <p>Enjoy the cool air from the city of Accra.</p>
+        <a href="{% url 'rooms' %}" class="btn">Book Now</a>
+    </div>
 </div>
+<hr>
+    
+</div>
+
+
+
 
 
 

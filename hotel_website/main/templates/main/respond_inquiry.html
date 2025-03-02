@@ -1,0 +1,28 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+
+<h2>Respond to Inquiry</h2>
+<p><strong>From:</strong> {{ inquiry.user.username }}</p>
+<p><strong>Subject:</strong> {{ inquiry.subject }}</p>
+<p><strong>Message:</strong> {{ inquiry.message }}</p>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Send Response</button>
+</form>
+
+
+{% endblock %}
