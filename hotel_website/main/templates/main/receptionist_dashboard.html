@@ -23,6 +23,7 @@
             padding: 0;
             background-color: #f4f4f4;
             display: flex;
+            
         }
 
         /* Sidebar styles */
@@ -33,6 +34,36 @@
             color: white;
             padding: 20px;
             position: fixed;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 220px;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+        }
+
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-toggle {
+                display: block;
+            }
         }
 
         .sidebar h2 {
@@ -54,11 +85,32 @@
             background-color: #495057;
         }
 
+        .sidebar.active {
+            transform: translateX(-250px);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+        }
+
         /* Main content styles */
         .main-content {
-            margin-left: 270px;
+            margin-left: 250px;
             padding: 20px;
             flex-grow: 1;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        .table-responsive {
+            overflow-x: auto;
         }
 
         .content-section {
@@ -75,15 +127,15 @@
             margin-top: 10px;
         }
 
-        table, th, td {
+        th, td {
             border: 1px solid #ddd;
             padding: 10px;
             text-align: left;
         }
 
-        th {
-            background-color: #343a40;
-            color: white;
+        table {
+            width: 100%;
+            border-collapse: collapse;
         }
 
         .btn {
@@ -110,7 +162,9 @@
         }
     </style>
 
-
+    <button id="sidebarToggle" class="sidebar-toggle" type="button" onclick="toggleSidebar()">
+        ☰ Menu
+    </button>
     <!-- Sidebar -->
     <div class="sidebar">
         <h2>Admin Panel</h2>
@@ -127,6 +181,7 @@
         <!-- Bookings Section -->
         <div id="bookings" class="content-section">
             <h3>Bookings</h3>
+            <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
@@ -172,6 +227,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
         </div>
 
         <!-- Inquiries Section -->
@@ -238,6 +294,7 @@
             <div id="bookings" class="content-section">
                 <h3>Recent Notifications</h3>
                 <hr>
+                <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
@@ -286,17 +343,8 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                </div>
             </div>
-    
-            <!-- <h3>Recent Notifications</h3>
-            <div class="notification-list">
-                {% for notification in notifications %}
-                    <p><strong>{{ notification.recipient.username }}</strong> {{ notification.message }}</p>
-                    <a href="{% url 'archive_notification' notification.id %}" style="background: none; border: none;" onclick="return confirm('Are you sure you want to archive this notification?')"><i class="fa-solid fa-box-archive"></a>
-                {% empty %}
-                    <p>No notifications available.</p>
-                {% endfor %}
-            </div> -->
         </div>
 
     </div>
@@ -313,6 +361,10 @@
             notificationItem.textContent = notification.message;
             notificationList.appendChild(notificationItem);
         };
+
+        document.getElementById("sidebarToggle").addEventListener("click", function() {
+    document.getElementById("sidebar").classList.toggle("active");
+});
     </script>
 
 {% endblock %}

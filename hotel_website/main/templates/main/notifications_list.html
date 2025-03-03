@@ -13,6 +13,16 @@
         
         }
 
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
         .content-section {
             background: white;
             padding: 20px;
@@ -44,7 +54,7 @@
     <div class="content-section">
         <h2>Your Notifications</h2>
         <p>Unread Notifications: <strong>{{ unread_count }}</strong></p>
-
+        <div class="table-responsive">
         <table>
             <tr>
                 <th>Message</th>
@@ -70,6 +80,7 @@
             </tr>
             {% endfor %}
         </table>
+        </div>
     </div>
 
 </div>
