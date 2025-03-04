@@ -209,7 +209,7 @@
                         <td style="text-align: center;">{{ booking.quantity }}</td>
                         <td>GHS {{ booking.get_total_price }}</td>
                         <td>{{ booking.created_at }}</td>
-                        {% if request.user.role == "manager" %}
+                        {% if request.user.role == "manager" or request.user.role == "receptionist" %}
                         <td style="text-align: center;">
                             <form action="{% url 'staff_delete' booking.id %}" method="POST">
                                 {% csrf_token %}
@@ -311,7 +311,7 @@
                         <tr>
                             <td>{{ notification.message }}</td>
                             <td>{{ notification.user.username }}</td>
-                            {% if request.user.role == "manager" %}
+                            {% if request.user.role == "manager" or request.user.role == "receptionist" %}
                                 <td style="text-align: center;">
                                     <form action="{% url 'archive_notification' notification.id %}" method="POST">
                                         {% csrf_token %}
