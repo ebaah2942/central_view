@@ -74,7 +74,7 @@ def login_view(request):
 
 
 
-    
+    # user booking delete view
 @login_required
 def delete_booking(request, booking_id):
     try:
@@ -96,7 +96,7 @@ def delete_booking(request, booking_id):
         return render(request, 'main/delete_booking.html', {'booking': booking})    
 
 
-
+# viewing all the booked rooms
 @login_required
 def booking_list(request):
     user = request.user
@@ -112,6 +112,8 @@ def booking_list(request):
         booking.grand_total = booking.total_price * booking.quantity
     return render(request, 'main/my_booking.html', {'bookings': bookings, 'name': name, 'phone_number': phone_number, 'page_obj': page_obj}) 
 
+
+# all inquires
 @login_required
 def inquiry_list(request):
     inquiries = Inquiry.objects.filter(user=request.user).order_by('-created_at')
@@ -168,6 +170,8 @@ def update_booking(request, booking_id):
 
     return render(request, 'main/update_booking.html', {'form': form, 'booking': booking})
 
+
+# administrative page
 @login_required
 def reception_dashboard(request):
     user_role = request.user.role.lower()
@@ -176,7 +180,6 @@ def reception_dashboard(request):
         return redirect('home') 
     booking = Booking.objects.select_related('user', 'room').all()
     inquiries = Inquiry.objects.filter(is_archived=False).order_by('-created_at')
-    # inquiries = Inquiry.objects.select_related('user').all().order_by('-created_at')
     users = CustomUser.objects.all()
     notifications = Notification.objects.all()
     if request.method == "POST":
@@ -241,16 +244,6 @@ def toggle_user_status(request, user_id):
     messages.success(request, f"User {'unbanned' if user.is_active else 'banned'} successfully.")
     return redirect('reception_dashboard')
 
-# @login_required
-# def send_notification(request):
-#     if request.method == "POST":
-#         user_id = request.POST.get("user_id")
-#         message = request.POST.get("message")
-#         if user_id and message:
-#             user = get_object_or_404(CustomUser, id=user_id)
-#             Notification.objects.create(user=user, message=message)
-#             messages.success(request, "Notification sent successfully.")
-#     return redirect('reception_dashboard')
 
 
 

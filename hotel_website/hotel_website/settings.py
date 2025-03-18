@@ -139,7 +139,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/reception-dashboard/'  # Redirect to receptionist dashboard
  # Redirect to home page after login
-LOGIN_URL = 'password-reset/'
+
 # LOGIN_URL = '/login/'    # Default login URL
 LOGOUT_REDIRECT_URL = '/login/'  # Redirect to login page after logout
 
