@@ -193,8 +193,8 @@
                         <th>Quantity</th>
                         <th>Total Price</th>
                         <th>Booking Date</th>
-                        {% if request.user.role == "manager" or request.user.role == "receptionist" %}
-                        <th>Delete</th>
+                        {% if request.user.role|lower == "manager" or request.user.role|lower == "receptionist" %}
+                        <th>Action</th>
                         {% endif %}
                     </tr>
                 </thead>
@@ -209,12 +209,12 @@
                         <td style="text-align: center;">{{ booking.quantity }}</td>
                         <td>GHS {{ booking.get_total_price }}</td>
                         <td>{{ booking.created_at }}</td>
-                        {% if request.user.role == "manager" or request.user.role == "receptionist" %}
+                        {% if request.user.role|lower == "manager" or request.user.role|lower == "receptionist" %}
                         <td style="text-align: center;">
                             <form action="{% url 'staff_delete' booking.id %}" method="POST">
                                 {% csrf_token %}
                                 <button style=" background: none; border: none;" type="submit" onclick="return confirm('Are you sure?')">
-                                    <i class="fa-solid fa-trash"></i>
+                                    <i class="fa-solid fa-trash"></i>Delete
                                 </button>
                             </form>
                         </td>
@@ -253,14 +253,14 @@
                         <td>{{ inquiry.message }}</td>
                         <td>{% if inquiry.is_resolved %}✅ Resolved{% else %}❌ Pending{% endif %}</td>
                         <td style="text-align: center;">
-                            <a href="{% url 'respond_inquiry' inquiry.id %}" style="background: none; border: none;""><i class="fa-solid fa-reply"></i></a>
+                            <a style="background: none; border: none; text-decoration: none; color: black;" type="submit" href="{% url 'respond_inquiry' inquiry.id %}">Reply</a>
                         </td>
                         <td>{{ inquiry.response }}</td>
                         <td style="text-align: center;"> 
                             <form action="{% url 'archive_inquiry' inquiry.id %}" method="POST">
                                 {% csrf_token %}
                                 <button style="background: none; border: none;" type="submit" onclick="return confirm('Are you sure you want to archive this inquiry?')">
-                                    <i class="fa-solid fa-box-archive"></i>
+                                    <i class="fa-solid fa-box-archive"></i>Archive
                                 </button>
                             </form>
                         </td>
@@ -311,7 +311,7 @@
                         <tr>
                             <td>{{ notification.message }}</td>
                             <td>{{ notification.user.username }}</td>
-                            {% if request.user.role == "manager" or request.user.role == "receptionist" %}
+                            {% if request.user.role|lower == "manager" or request.user.role|lower == "receptionist" %}
                                 <td style="text-align: center;">
                                     <form action="{% url 'archive_notification' notification.id %}" method="POST">
                                         {% csrf_token %}
@@ -321,7 +321,7 @@
                                     </form>
                                 </td>
                                 <td style="text-align: center;">
-                                    <a href="{% url 'new_notifications' %}" style="background: none; border: none;"><i class="fa-solid fa-rotate-left"></a>
+                                    <a style="background: none; border: none; text-decoration: none; color: black;" type="submit" href="{% url 'new_notifications' %}">Unarchive</a>
                                   
                                 </td>
                                 <td>

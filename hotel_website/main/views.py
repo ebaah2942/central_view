@@ -283,7 +283,7 @@ def send_notification(request):
 def staff_delete(request, booking_id):
     if request.method == 'POST':
         booking = get_object_or_404(Booking, id=booking_id)
-        if request.user.role != 'manager':
+        if request.user.role.lower() != 'manager':
             return HttpResponseForbidden("You do not have permission to delete a booking.")
         booking.delete()
         messages.success(request, "Booking deleted successfully.")

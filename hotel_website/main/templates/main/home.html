@@ -63,7 +63,11 @@
     
     }
 .container {
-   top: auto;
+    top: auto;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
 }
 
 .oboy {
@@ -128,68 +132,71 @@
 
 
 </style>
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            {{ message }}
-        </div>
-    {% endfor %}
-{% endif %}
-{% if user.is_authenticated %}
-    {% if user_role|lower == "guest" %}
-        <div style="background-color: aliceblue; padding: 20px; border-radius: 10px;">
-            <h1>Welcome, {{ user.username }}!</h1>
-            {% if room %}
-                <a href="{% url 'rooms' %}" class="btn btn-primary">Book Now</a> <span><a class="btn btn-primary" href="{% url 'send_inquiry' %}">Send Inquiry</a></span>
-            {% endif %}
-        </div>
-    {% elif user_role|lower in "manager receptionist" %}
-        <div style="background-color: aliceblue; padding: 20px; border-radius: 10px;">
-            <h2>Welcome, {{ user.username }}!</h2>
-            <a href="{% url 'reception_dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
-        </div>
+<div class="container">
+        {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
     {% endif %}
-{% endif %}
+    {% if user.is_authenticated %}
+        {% if user_role|lower == "guest" %}
+            <div style="background-color: aliceblue; padding: 20px; border-radius: 10px;">
+                <h1>Welcome, {{ user.username }}!</h1>
+                {% if room %}
+                    <a href="{% url 'rooms' %}" class="btn btn-primary">Book Now</a> <span><a class="btn btn-primary" href="{% url 'send_inquiry' %}">Send Inquiry</a></span>
+                {% endif %}
+            </div>
+        {% elif user_role|lower in "manager receptionist" %}
+            <div style="background-color: aliceblue; padding: 20px; border-radius: 10px;">
+                <h2>Welcome, {{ user.username }}!</h2>
+                <a href="{% url 'reception_dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
+            </div>
+        {% endif %}
+    {% endif %}
 
+        <hr>
+        <div class="solace">
+            <h1> Welcome to Accra Central View Hotel!</h1>
+            <p>Experience Luxury at its best.</p>
+        </div>
     <hr>
-    <div class="solace">
-        <h1> Welcome to Accra Central View Hotel!</h1>
-        <p>Experience Luxury at its best.</p>
-    </div>
-<hr>
-    <div class="solace2">
-        <div style="width: 50%; text-align: center;" class="block">
-            <img src="https://myacvhbucket.s3.eu-north-1.amazonaws.com/acvh_latest/outside2.JPG" alt="Outside">
-            <p>
-                Welcome to our modern hotel, nestled in the heart of the city, spacious rooms, and an array of amenities to cater to your every need.
-                With a rooftop bar, very fine dining restaurant serving local and international dishes.
-                Rest assured that our hotel is equipped with a lift, providing easy access to all floors.
-            </p>
+        <div class="solace2">
+            <div style="width: 50%; text-align: center;" class="block">
+                <img src="https://myacvhbucket.s3.eu-north-1.amazonaws.com/acvh_latest/outside2.JPG" alt="Outside">
+                <p>
+                    Welcome to our modern hotel, nestled in the heart of the city, spacious rooms, and an array of amenities to cater to your every need.
+                    With a rooftop bar, very fine dining restaurant serving local and international dishes.
+                    Rest assured that our hotel is equipped with a lift, providing easy access to all floors.
+                </p>
+            </div>
+            <div style="width: 50%; text-align: center;" class="block">
+                <img src="https://myacvhbucket.s3.eu-north-1.amazonaws.com/acvh_latest/ariel.jpg" alt="Ariel view">
+                <p>
+                    Here is an aerial view of the hotel surrounded by nice buildings and a sparkling lights in the evenings.
+                    It showcases modern architecture, stunning views, and a bright, inviting atmosphere.
+                </p>
+            </div>
         </div>
-        <div style="width: 50%; text-align: center;" class="block">
-            <img src="https://myacvhbucket.s3.eu-north-1.amazonaws.com/acvh_latest/ariel.jpg" alt="Ariel view">
-            <p>
-                Here is an aerial view of the hotel surrounded by nice buildings and a sparkling lights in the evenings.
-                It showcases modern architecture, stunning views, and a bright, inviting atmosphere.
-            </p>
+    <hr>
+    <div class="video-section">
+        <video autoplay muted loop playsinline>
+            <source src="https://myacvhbucket.s3.eu-north-1.amazonaws.com/rooftopbar.mov" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="overlay"></div>
+        <div class="content">
+            <h1>Welcome to Our RoofTop Bar</h1>
+            <p>Enjoy the cool air from the city of Accra.</p>
+            <a href="{% url 'rooms' %}" class="btn">Book Now</a>
         </div>
     </div>
-<hr>
-<div class="video-section">
-    <video autoplay muted loop playsinline>
-        <source src="https://myacvhbucket.s3.eu-north-1.amazonaws.com/rooftopbar.mov" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-    <div class="overlay"></div>
-    <div class="content">
-        <h1>Welcome to Our RoofTop Bar</h1>
-        <p>Enjoy the cool air from the city of Accra.</p>
-        <a href="{% url 'rooms' %}" class="btn">Book Now</a>
-    </div>
+    <hr>
+
 </div>
-<hr>
+
     
-</div>
 
 
 

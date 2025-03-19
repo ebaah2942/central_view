@@ -5,38 +5,64 @@
 {% block title %}Book Room{% endblock %}
 
 {% block content %}
-<h2>Archived Notifications</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Message</th>
-            <th>Recipient</th>
-            <th>Unarchive</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for notification in archived_notifications %}
-        <tr>
-            <td>{{ notification.message }}</td>
-            <td>{{ notification.recipient.username }}</td>
+<style>
+    .content-section {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
 
-            <!-- Unarchive Button -->
-            <td style="text-align: center;">
-                <form action="{% url 'unarchive_notification' notification.id %}" method="POST">
-                    {% csrf_token %}
-                    <button style="background: none; border: none;" type="submit">
-                        <i class="fa-solid fa-rotate-left"></i>
-                    </button>
-                </form>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="3" style="text-align: center;">No archived notifications</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+</style>
+
+<div class="content-section">
+    <h2>Archived Notifications</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Message</th>
+                <th>Recipient</th>
+                <th>Unarchive</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for notification in archived_notifications %}
+            <tr>
+                <td>{{ notification.message }}</td>
+                <td>{{ notification.user.username }}</td>
+
+                <!-- Unarchive Button -->
+                <td style="text-align: center;">
+                    <form action="{% url 'unarchive_notification' notification.id %}" method="POST">
+                        {% csrf_token %}
+                        <button style="background: none; border: none;" type="submit">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" style="text-align: center;">No archived notifications</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
 
 
 

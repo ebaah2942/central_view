@@ -94,128 +94,104 @@
 </div>
 <hr>
 {% endfor %}
-<style>
-    .room4 {
-        text-align: left; 
-        line-height: 1.8;  
-        padding: 1rem;  
-        background-color: #f9f9f9; 
-        font-family: 'Montserrat', serif, sans-serif;
+
+
+  <style>
+    body {
+        font-family: 'Montserrat', sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
     }
-    .room3 {
-        font-family: 'Montserrat', serif, sans-serif; 
-        font-weight: bold;
-    }
-    .room2 {
-        padding: 20px; 
-        text-align: center; 
-        font-weight: bold; 
-        font-family: 'Montserrat', serif;
-    }
+
     .room {
-        padding: 20px; 
-        border-radius: 20px; 
-        text-align: center; 
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); 
-        background-color: #f2f2f2;
+        background: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
     }
-    .price {
-        text-align: left; 
-        line-height: 1.8;  
-        padding: 1rem;  
-        background-color: #f9f9f9; 
-        margin-top: 1rem; 
-        font-family: 'Montserrat', serif;  
+
+    .room:hover {
+        transform: scale(1.02);
     }
-    .book {
-        background-color: #007bff; 
-        color: white; 
-        padding: 0.75rem 2rem; 
-        font-size: 16px; 
-        border: none; 
-        border-radius: 5px; 
-        cursor: pointer; 
-        animation: pulse 2s infinite; 
-    }
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
-  
-    @keyframes slideUp {
-      0% {
-        transform: translateY(50px);
-        opacity: 0;
-      }
-      100% {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-  
-    @keyframes pulse {
-      0%, 100% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.05);
-      }
-    }
-    .read-more-btn {
-        display: block; 
-        background-color: #130f0f;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        cursor: pointer;
-        border-radius: 5px;
-        margin-top: 5px;
+
+    /* Room Title */
+    .room h2 {
+        font-size: 24px;
+        color: #4a148c;
+        font-weight: bold;
         margin-bottom: 10px;
-}
+    }
 
-.room-description {
-    position: relative;
-    max-width: 500px;
-    margin-bottom: 10px;
-    text-align: left;
-    line-height: 1.8;
-    padding: 1rem;
-    font-family: 'Montserrat', serif;
-    background-color: #f9f9f9;
-    max-width: 100%;
-}
+    /* Description */
+    .room-description p {
+        font-size: 16px;
+        color: #555;
+    }
 
-.full-text {
-    display: none;
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease-out, opacity 0.5s ease-in;
-    text-align: left;
-    line-height: 1.8;
-    padding: 1rem;
-    font-family: 'Montserrat', serif;
-    max-width: 100%;
-}
+    .short-text {
+        display: inline;
+    }
 
-.full-text.show {
-    display: inline;
-    opacity: 1;
-    max-height: 500px; /* Adjust based on expected text height */
-}
+    .full-text {
+        display: none;
+        color: #333;
+    }
 
+    /* Read More Button */
+    .read-more-btn {
+        background: none;
+        border: none;
+        color: #007bff;
+        font-size: 16px;
+        cursor: pointer;
+    }
 
     .read-more-btn:hover {
-        background-color: #0056b3;
+        text-decoration: underline;
     }
 
-   
+    /* Price Styling */
+    .price {
+        font-size: 18px;
+        color: #ff5733;
+        font-weight: bold;
+    }
 
-  </style>
+    /* Booking Button */
+    .book {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #28a745;
+        color: white;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: background 0.3s;
+    }
+
+    .book:hover {
+        background: #218838;
+        text-decoration: none;
+    }
+
+    /* Carousel Styling */
+    .carousel img {
+        border-radius: 10px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .room {
+            padding: 15px;
+        }
+        .room h2 {
+            font-size: 20px;
+        }
+    }
+
+</style>
 
 <script>
    
