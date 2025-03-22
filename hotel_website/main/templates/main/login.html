@@ -5,82 +5,103 @@
 
 {% block content %}
 
-<div class="solace3" class="container mt-3">
-  {% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            {{ message }}
-        </div>
-    {% endfor %}
-  {% endif %}
 
-    <div class="row justify-content-center">
-        <h1 class="text-center mb-4">Login</h1>
-        <div class="col-md-6">
-            <form method="POST">
-                {% csrf_token %}
-                {{ form.as_p }} 
-                <button type="submit" class="btn btn-primary w-100">Login</button>
-            </form>
-            <div>
-                <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
-            </div>
-        </div>
-    </div>
-</div>
+
+<div class="login-wrapper">
+  <div class="login-container">
+      {% if messages %}
+      {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+              {{ message }}
+          </div>
+      {% endfor %}
+    {% endif %}
+      <h2>Login</h2>
+      <form method="post">
+          {% csrf_token %}
+          <div class="form-group">
+              {{ form.as_p }}  <!-- Keeps Django form structure -->
+          </div>
+          <button type="submit" class="btn">Login</button>
+      </form>
+      <p style="margin-top: 15px;">Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+      <p>Forgot Password? <a href="{% url 'password_reset' %}">Reset here</a></p>
+  </div>
+<div>
 <style>
 
-    .solace3 {
-      text-align: center;
-      font-family: 'Montserrat', serif;
-      margin: 2rem auto;
-      max-width: 400px;
+   
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 70vh; /* Reduced height */
+        padding: 40px 20px;
+}
+  
+
+    .login-container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 100%;
+        max-width: 350px;
+        margin: 0;
        
-    }
-    button {
-      animation: pulse 2s infinite;
-      background-color: #007bff;
-      color: white;
-      padding: 0.75rem 2rem;
-      font-size: 16px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+}
 
+    h2 {
+        margin-bottom: 20px;
     }
 
-    .solace3 p {
-      text-align: center;
-      margin-top: 1rem;
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
+    .form-group {
+        width: 100%;
     }
-  
-    @keyframes slideUp {
-      0% {
-        transform: translateY(50px);
-        opacity: 0;
-      }
-      100% {
-        transform: translateY(0);
-        opacity: 1;
-      }
+
+    form p {
+        margin-bottom: 15px;
+        text-align: left;
     }
-  
-    @keyframes pulse {
-      0%, 100% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.05);
-      }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
     }
+
+    .btn {
+        width: 100%;
+        background-color: #007bff;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+ 
   </style>
 {% endblock %}

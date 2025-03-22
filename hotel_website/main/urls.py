@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from .views import update_profile, change_password
 from django.contrib.auth.views import LogoutView
+from django.contrib.auth import views as auth_views
 
 
 
@@ -39,5 +40,9 @@ urlpatterns = [
     path('notifications/archived/', views.new_notifications, name='new_notifications'),
     path("notifcation-list/", views.notifications_list, name="notifications_list"),
     path('notifications/read/<int:notification_id>/', views.mark_as_read, name='mark_as_read'),
+    path("password_reset/", auth_views.PasswordResetView.as_view(), name="password_reset"),
+    path("password_reset/done/", auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"),
+    path("reset/<uidb64>/<token>/", auth_views.PasswordResetConfirmView.as_view(), name="password_reset_confirm"),
+    path("reset/done/", auth_views.PasswordResetCompleteView.as_view(), name="password_reset_complete"),
 
 ]

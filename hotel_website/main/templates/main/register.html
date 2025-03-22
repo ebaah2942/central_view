@@ -5,79 +5,101 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
-<div class="container mt-3">
-  {% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            {{ message }}
-        </div>
-    {% endfor %}
-  {% endif %}
+<div class="register-wrapper">
+  <div class="register-container">
+      {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+      {% endif %}
 
-    <h1 class="text-center mb-4">Register</h1>
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button class="btn btn-primary w-100" type="submit">Register</button>
-              </form>   
-        </div>
-        <div>
-            <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
-        </div>
-    </div>
+      <h1 class="text-center mb-4">Register</h1>
+   
+      <form method="post">
+          {% csrf_token %}
+          <div class="form-group">
+              {{ form.as_p }}
+          </div>          
+          <button class="btn btn-primary w-100" type="submit">Register</button>
+      </form>     
+      <p style="margin-top: 15px;">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+  </div>
 </div>
+
+ 
 <style>
-  p {
-    text-align: center; 
-    margin-top: 1rem;
-  }
-
-  button {
-    background-color: #007bff; 
-    color: white; 
-    padding: 0.75rem 2rem; 
-    font-size: 16px; 
-    border: none; 
-    border-radius: 5px; 
-    cursor: pointer; 
-    animation: pulse 2s infinite;
-  }
-  .container {
-    text-align: center; 
-    margin: 2rem auto; 
-    max-width: 400px; 
-    font-family: 'Montserrat', serif, sans-serif;
-  }
-
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
+      .register-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 70vh; /* Reduced height */
+        padding: 40px 20px;
+}
   
-    @keyframes slideUp {
-      0% {
-        transform: translateY(50px);
-        opacity: 0;
-      }
-      100% {
-        transform: translateY(0);
-        opacity: 1;
-      }
+
+    .register-container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 100%;
+        max-width: 350px;
+        margin: 0;
+       
+}
+
+    h2 {
+        margin-bottom: 20px;
     }
-  
-    @keyframes pulse {
-      0%, 100% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.05);
-      }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    form p {
+        margin-bottom: 15px;
+        text-align: left;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .btn {
+        width: 100%;
+        background-color: #007bff;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
     }
   </style>
 
