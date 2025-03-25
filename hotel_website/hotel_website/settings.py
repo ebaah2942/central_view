@@ -16,6 +16,7 @@ import dj_database_url
 from django.contrib.messages import constants as messages
 from dotenv import load_dotenv
 from django.urls import reverse_lazy
+from django.contrib.messages import constants as messages
 
 load_dotenv()
 
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
+    'registration.apps.RegistrationConfig',
     'django_extensions',
     'storages',
     'channels',
@@ -184,12 +186,44 @@ CHANNEL_LAYERS = {
 
 
 
-EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.getenv("EMAIL_HOST")
-EMAIL_PORT = os.getenv("EMAIL_PORT")
-EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT"))
+EMAIL_USE_TLS = True 
+EMAIL_USE_SSL = False 
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
+
+EMAIL_DEBUG = True
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "mail_log": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "email_debug.log",
+        },
+    },
+    "loggers": {
+        "django.core.mail": {
+            "handlers": ["mail_log"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
+}
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+# Optional: Customize message levels (use 'extra_tags' for styling)
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'error',
+}

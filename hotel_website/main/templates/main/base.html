@@ -48,8 +48,9 @@
     .navbar-brand {
       font-size: 1.25rem;
       color: #343a40 !important;
+      
     }   
-
+   
     .navbar-nav .nav-link {
       color: #fff !important;
       padding: 0.5rem 1rem;
@@ -76,6 +77,21 @@
   .btn:hover {
     background: #cce0ff;
 }
+
+    a:hover:not(.navbar-brand) {
+          background: #fff;
+            
+        
+        }
+
+    a {
+            display: inline-block;
+            padding: 6px 12px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+    }    
 
     .nav-links a:hover {
     background: rgba(255, 255, 255, 0.2);
@@ -132,9 +148,61 @@
       color: #fff;
       text-decoration: underline;
     }
-  </style>
+    .top-alert {
+        position: relative;
+        top: 100px;
+        width: 100%;
+        background: #ff9800;
+        color: white;
+        padding: 15px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        transition: opacity 0.5s ease, height 0.5s ease;
+        visibility: visible; /* Ensure it's not hidden */
+        opacity: 1; /* Make sure it's fully visible */
+}
+
+.top-alert p {
+    margin: 0; /* Remove extra spacing */
+    flex: 1; /* Allow text to take up space */
+}
+
+.top-alert button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+
+
+
+
+ 
+    .alert.error { background: #dc3545; } /* Red for error messages */
+    .alert.success { background: #28a745; } /* Green */
+    .alert.info { background: #333; } /* Blue */
+    .alert.warning { background: #ffc107; }
+
+</style>
 </head>
 <body>
+  {% if messages %}
+  <div id="top-alert" class="top-alert">
+      {% for message in messages %}
+          <p>{{ message }}</p>
+      {% endfor %}
+      <button id="close-alert">&times;</button>
+  </div>
+  {% endif %}
+  
 
   <div class="container-fluid">
     <!-- Navbar -->
@@ -220,17 +288,23 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
+<script>
     document.addEventListener("DOMContentLoaded", function () {
-      setTimeout(function () {
-        let alerts = document.querySelectorAll(".alert");
-        alerts.forEach(alert => {
-          alert.style.transition = "opacity 0.5s ease";
-          alert.style.opacity = "0";
-          setTimeout(() => alert.remove(), 500); // Removes the element completely
-        });
-      }, 3000); // Message disappears after 3 seconds
-    });
+        console.log("JavaScript loaded!"); // Debugging line
+
+        let alertBox = document.getElementById("top-alert");
+        let closeBtn = document.getElementById("close-alert");
+
+        if (alertBox && closeBtn) {
+            closeBtn.addEventListener("click", function () {
+                alertBox.style.transition = "opacity 0.5s ease, height 0.5s ease";
+                alertBox.style.opacity = "0";
+                alertBox.style.height = "0px";
+                setTimeout(() => alertBox.remove(), 500); // Removes from DOM after animation
+            });
+        }
+});
+
 
     document.addEventListener("DOMContentLoaded", function () {
         if (!localStorage.getItem("cookiesAccepted")) {

@@ -15,13 +15,6 @@
       <div class="col-md-6">
           <form action="{% url 'book_room' room_id=room.id %}" method="POST">
               {% csrf_token %}
-              {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-              {% endif %}
               <h2>Selected Room: {{ room.name }}</h2>
               <!-- Render the form fields with Bootstrap styling -->
               <div class="form-group mb-3">

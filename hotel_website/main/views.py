@@ -26,6 +26,7 @@ def home(request):
     room = Room.objects.first()
     if request.user.is_authenticated:
         user_role = request.user.role
+    messages.info(request, "Check-in time: 12:00 PM | Check-out time: 12:00 PM(The folowing day) Please note that regardless of your check-in time, check-out time is required by 12:00 Noon.")
     return render(request, 'main/home.html', {'user_role': user_role , 'room': room})
 
 def privacy_policy(request):
@@ -34,6 +35,7 @@ def privacy_policy(request):
 
 def rooms(request):
     all_rooms = Room.objects.all().order_by('price')
+    messages.info(request, "Check-in time: 12:00 PM | Check-out time: 12:00 PM(The folowing day) Please note that regardless of your check-in time, check-out time is required by 12:00 Noon.")
     return render(request, 'main/rooms.html' , {'rooms': all_rooms})
 
 def amenity(request):
@@ -46,8 +48,10 @@ def register(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "Account created successfully")
             return redirect('login')
         else:
+            messages.error(request, "Registration failed")
             return render(request, 'main/register.html', {'form': form, "hide_nav": True})
     else:
         form = CustomUserCreationForm()
@@ -141,6 +145,7 @@ def book_room(request, room_id):
                 messages.error(request, "Quantity must be greater than 0.")
     else:
         form = BookingForm()
+    messages.info(request, "Check-in time: 12:00 PM | Check-out time: 12:00 PM(The folowing day) Please note that regardless of your check-in time, check-out time is required by 12:00 Noon.")
     return render(request, 'main/booking.html', {'room': room, 'form': form})
 
 
@@ -178,7 +183,7 @@ def reception_dashboard(request):
     if user_role not in ['manager', 'receptionist']:
         messages.error(request, "You do not have permission to access this page.")
         return redirect('home') 
-    booking = Booking.objects.select_related('user', 'room').all()
+    booking = Booking.objects.select_related('user', 'room').all().order_by('-created_at')
     inquiries = Inquiry.objects.filter(is_archived=False).order_by('-created_at')
     users = CustomUser.objects.all()
     notifications = Notification.objects.all()

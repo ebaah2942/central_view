@@ -30,16 +30,7 @@
         font-weight: bold;
         
     }
-    /* iframe {
-        width: 200px;
-        position: absolute;
-        height: 200px;
-        border-radius: 100px;
-        bottom: 10px;
-        right: 10px;
-        overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
-    } */
+  
 
     .solace2 {
         display: flex;
@@ -129,17 +120,10 @@
     border-radius: 5px;
 }
 
-
-
 </style>
+
 <div class="container">
-        {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
+   
     {% if user.is_authenticated %}
         {% if user_role|lower == "guest" %}
             <div style="background-color: aliceblue; padding: 20px; border-radius: 10px;">
@@ -195,11 +179,6 @@
     <hr>
 
 </div>
-
-    
-
-
-
 
 
 

@@ -9,13 +9,6 @@
 
 <div class="login-wrapper">
   <div class="login-container">
-      {% if messages %}
-      {% for message in messages %}
-          <div class="alert alert-{{ message.tags }}">
-              {{ message }}
-          </div>
-      {% endfor %}
-    {% endif %}
       <h2>Login</h2>
       <form method="post">
           {% csrf_token %}
@@ -25,7 +18,7 @@
           <button type="submit" class="btn">Login</button>
       </form>
       <p style="margin-top: 15px;">Don't have an account? <a href="{% url 'register' %}">Register</a></p>
-      <p>Forgot Password? <a href="{% url 'password_reset' %}">Reset here</a></p>
+      <p>Forgot Password? <a href="{% url 'custom_password_reset_request' %}">Reset here</a></p>
   </div>
 <div>
 <style>

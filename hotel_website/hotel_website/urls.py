@@ -23,6 +23,7 @@ from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
+    path('accounts/', include('registration.urls')),
     path('', include('main.urls')),
     path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls),

@@ -4,17 +4,6 @@
 {% block title %}Rooms{% endblock %}
 
 {% block content %}
-
-
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            {{ message }}
-        </div>
-    {% endfor %}
-{% endif %}
-
-
     <style>
         /* General styles */
         body {
@@ -95,55 +84,6 @@
             }
         }
 
-        /* Main content styles */
-        /* .main-content {
-            margin-left: 250px;
-            padding: 20px;
-            flex-grow: 1;
-            transition: margin-left 0.3s ease-in-out;
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                margin-left: 0;
-            }
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-        }
-
-        .content-section {
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .btn {
-            padding: 8px 12px;
-            border-radius: 5px;
-            text-decoration: none;
-            display: inline-block;
-        } */
 
         .btn-primary { background-color: #007bff; color: white; }
         .btn-danger { background-color: #dc3545; color: white; }
@@ -162,10 +102,10 @@
         }
 
         body {
-    font-family: 'Montserrat', sans-serif;
-    background-color: #f8f9fa;
-    margin: 0;
-    padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
 }
 
 /* Main Content */
