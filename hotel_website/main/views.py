@@ -121,7 +121,8 @@ def booking_list(request):
 @login_required
 def inquiry_list(request):
     inquiries = Inquiry.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'main/user_inquiries.html', {'inquiries': inquiries}) 
+    unread_count = inquiries.filter(is_read=False).count() 
+    return render(request, 'main/user_inquiries.html', {'inquiries': inquiries, 'unread_count': unread_count}) 
 
 @login_required
 def book_room(request, room_id):

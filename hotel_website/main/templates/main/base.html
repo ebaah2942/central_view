@@ -8,12 +8,14 @@
   <title>{% block title %}Hotel Website{% endblock %}</title>
   <title>ACVH</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="icon" type="image/x-icon" href="https://myacvhbucket.s3.eu-north-1.amazonaws.com/favicon.ico">
+  <!-- CDN Example -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-KBJT14H8PB"></script>
   <script>
@@ -193,6 +195,27 @@
 }
 
 
+/* .badge {
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 8px;
+    font-size: 12px;
+    margin-left: 5px;
+} */
+
+.notification-link .badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    margin-bottom: 20px;
+}
+
 
 
 
@@ -234,19 +257,26 @@
           </ul> 
           <ul class="navbar-nav ms-auto">
             {% if user.is_authenticated %}
-              <li class="nav-item"><a class="nav-link" href="{% url 'inquiry_list' %}">Inquire</a></li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'inquiry_list' %}">
+                  Inquiries
+                  {% if inquiry_unread_count > 0 %}
+                      <span class="badge bg-danger">{{ inquiry_unread_count }}</span>
+                  {% endif %}
+              </a>
+              </li>
               <li class="nav-item"><a class="nav-link" href="{% url 'booking_list' %}">My Bookings</a></li>
               <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">Profile</a></li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'notifications_list' %}">
-                    Notifications 
-                    {% if unread_count > 0 %}
-                        <span class="badge bg-danger">{{ unread_count }}</span>
-                    {% endif %}
+                <a class="nav-link" style="position: relative;" href="{% url 'notifications_list' %}">
+                  Notifications 
+                  {% if unread_count > 0 %}
+                      <span class="badge bg-danger">{{ unread_count }}</span>
+                  {% endif %}
                 </a>
               </li>
               <li class="nav-item">
-                <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                <form method="post" action="{% url 'logout' %}">
                   {% csrf_token %}
                   <button type="submit" class="btn btn-link nav-link">Logout</button>
                 </form>

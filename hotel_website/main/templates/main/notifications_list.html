@@ -124,7 +124,9 @@
                 </td>
                 <td>
                     {% if not notification.is_read %}
-                        <a href="{% url 'mark_as_read' notification.id %}">Mark as Read</a>
+                        <a style="color: #333;" href="{% url 'mark_as_read' notification.id %}">Mark as Read</a>
+                    {% else %}
+                        <span style="color: #333;">No Action Required</span>
                     {% endif %}
                 </td>
             </tr>
