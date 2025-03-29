@@ -7,9 +7,10 @@
 {% block content %}
 
 
-<h1 class="room2">Welcome to Our Elegant Rooms</h1>
+<div style="text-align: center;"><h1>Room Categories</h1></div>
 {% for room in rooms %}
     <div class="room">
+        
         <div class="room-description">
             <h2 class="room3">{{ room.name }}</h2>
             <p id="desc-{{ room.id }}" class="short-text">
@@ -188,8 +189,13 @@
         .room h2 {
             font-size: 20px;
         }
+        .room2 {
+            text-align: center !important;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+        }
     }
-
+    
 </style>
 
 <script>
