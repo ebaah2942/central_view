@@ -19,6 +19,16 @@ from asgiref.sync import async_to_sync
 from django.http import HttpResponse
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.tokens import default_token_generator
+
 
 # Create your views here.
 def home(request):
@@ -43,19 +53,74 @@ def amenity(request):
 
     return render(request, 'main/amenities.html' , {'amenities': all_amenities})
 
+
+def send_verification_email(request, user):
+    """
+    Sends a verification email to the user with a unique activation link.
+    """
+    token = default_token_generator.make_token(user)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    domain = get_current_site(request).domain
+    link = f"http://{domain}/activate/{uid}/{token}/"
+
+    subject = "Verify Your Email - Accra Central View Hotel"
+    message = render_to_string('main/email_verification.html', {'user': user, 'link': link})
+    
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
+
+
+
+def activate_account(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        messages.success(request, "Your account has been verified. You can now log in.")
+        return redirect("login")
+    else:
+        messages.error(request, "Invalid or expired activation link.")
+        return redirect("register")
+
+# def register(request):
+#     if request.method == 'POST':
+#         form = CustomUserCreationForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, "Account created successfully")
+#             return redirect('login')
+#         else:
+#             messages.error(request, "Registration failed")
+#             return render(request, 'main/register.html', {'form': form, "hide_nav": True})
+#     else:
+#         form = CustomUserCreationForm()
+#     return render(request, 'main/register.html', {'form': form , "hide_nav": True})
+
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Account created successfully")
+            user = form.save(commit=False)
+            user.is_active = False  # Prevent login until email is verified
+            user.save()
+
+            send_verification_email(request, user)
+
+            messages.success(request, "Account created successfully. Please check your email to verify your account.")
             return redirect('login')
         else:
             messages.error(request, "Registration failed")
-            return render(request, 'main/register.html', {'form': form, "hide_nav": True})
+    
     else:
         form = CustomUserCreationForm()
-    return render(request, 'main/register.html', {'form': form , "hide_nav": True})
+    
+    return render(request, 'main/register.html', {'form': form, "hide_nav": True})
+
+
 
 def login_view(request):
     if request.method == 'POST':

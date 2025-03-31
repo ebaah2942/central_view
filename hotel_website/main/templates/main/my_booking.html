@@ -18,12 +18,12 @@
             <p>Number of days: {{ booking.num_of_day }}</p>
             <p>Quantity: {{ booking.quantity }}</p>
             <p>Total Price: GHS {{ booking.get_total_price }}</p>
-            <p style="color: red; font-weight: bold; font-style: italic;">Kindly call to confirm availability and make payment: <i class="fa-solid fa-phone"></i>+233 59 433 2382/+233 30 223 1759</p> 
+            <p style="color: red; font-weight: bold; font-style: italic;">Kindly call to confirm availability and make payment: 📞 +233 59 433 2382/+233 30 223 1759</p> 
             <p>Do you want to add another booking? <a style="text-decoration: none; color: green;" href="{% url 'rooms' %}"><i class="fas fa-plus"></i> Book Now</a></p> 
             <a href="{% url 'update_booking' booking.id %}" class="btn btn-warning"><i class="fas fa-edit"></i> Update</a>
             <form action="{% url 'delete_booking' booking.id %}" method="post" onsubmit="return confirmDelete()" style="display:inline;">
                 {% csrf_token %}
-                <button style="margin-left: 10px; background: none; border: none;" type="submit" onclick="confirmDelete(event, '{{ booking.id }}')"><i class="fas fa-trash"></i></button>
+                <button class="btn btn-danger" style="margin-left: 10px;" type="submit" onclick="confirmDelete(event, '{{ booking.id }}')">Delete</button>
             </form>
             <p style="text-align: right; font-style: italic; font-weight: bold; font-size: 12px">{{ booking.created_at }}</p>  
         </div>
