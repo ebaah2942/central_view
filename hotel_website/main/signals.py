@@ -19,8 +19,8 @@ def send_notification_email(subject, message, recipient_email):
 @receiver(post_save, sender=User)
 def send_welcome_email(sender, instance, created, **kwargs):
     if created:  # Only send email when a new user is created
-        subject = "Welcome to Our Hotel!"
-        message = f"Dear {instance.username},\n\nThank you for signing up!\n\nBest regards,\nHotel Team"
+        subject = "Welcome to Accra Central View Hotel!"
+        message = f"Dear {instance.username},\n\nThank you for signing up!\n\nBest regards,\nAccra Central View Hotel"
         send_notification_email(subject, message, instance.email)
 
 # 2️⃣ Send Confirmation Email When a Booking is Made
@@ -36,7 +36,7 @@ def send_booking_confirmation(sender, instance, created, **kwargs):
 def send_inquiry_response_notification(sender, instance, **kwargs):
     if instance.response:  # Only send email if a response is added
         subject = "Response to Your Inquiry"
-        message = f"Dear {instance.user.username},\n\nOur team has responded to your inquiry: {instance.response}\n\nThank you!"
+        message = f"Dear {instance.user.username},\n\nThe hotel has responded to your inquiry: {instance.response}\n\nThank you!"
         send_notification_email(subject, message, instance.user.email)
 
 
@@ -62,11 +62,12 @@ def notify_admin_new_inquiry(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=Notification)
 def send_email_notification(sender, instance, created, **kwargs):
+
     """
     Sends an email when a new notification is created.
     """
     if created:  # Only send email for new notifications
-        send_mail(
+        send_mail(           
             "New Notification from Accra Central View Hotel",
             f"Hello {instance.user.username},\n\n{instance.message}",
             settings.DEFAULT_FROM_EMAIL,
