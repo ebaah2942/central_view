@@ -28,6 +28,14 @@ from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.html import strip_tags
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+import weasyprint
+from django.core.mail import EmailMessage
+from weasyprint import HTML
+from io import BytesIO   
+
 
 
 # Create your views here.
@@ -54,7 +62,7 @@ def amenity(request):
     return render(request, 'main/amenities.html' , {'amenities': all_amenities})
 
 
-
+# View to send verification email
 def send_verification_email(request, user):
     """
     Sends a verification email to the user with a unique activation link.
@@ -69,8 +77,88 @@ def send_verification_email(request, user):
     
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
 
+# View to unsubscribe from email notifications
+def unsubscribe_view(request, uidb64):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = CustomUser.objects.get(pk=uid)
+        user.wants_emails = False
+        user.save()
+        return render(request, 'main/unsubscribe_success.html', {'user': user})
+    except (CustomUser.DoesNotExist, ValueError, TypeError, OverflowError):
+        messages.error(request, "Invalid unsubscribe link.")
+        return render(request, 'main/unsubscribe_invalid.html')
+
+# View to generate and download PDF receipt
+def generate_receipt_pdf(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    template = get_template('main/receipt_pdf.html')
+    html = template.render({'booking': booking})
+
+    # Check if user wants to download
+    if 'download' in request.GET:
+        pdf_file = weasyprint.HTML(string=html).write_pdf()
+        response = HttpResponse(pdf_file, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="receipt_{booking.id}.pdf"'
+        return response
+
+    # Just render the HTML in browser
+    return HttpResponse(html)
+
+# Function to send receipt email
+def email_receipt(user, booking):
+    # Render the receipt template to HTML
+    html_string = render_to_string('main/receipt_pdf.html', {'booking': booking})
+    
+    # Generate PDF in memory
+    pdf_file = BytesIO()
+    HTML(string=html_string).write_pdf(target=pdf_file)
+    pdf_file.seek(0)
+
+    # Create the email
+    subject = "Your Booking Receipt - Accra Central View Hotel"
+    body = f"Hello {user.username},\n\nAttached is your receipt for your recent booking.\n\nThank you for choosing us!"
+
+    email = EmailMessage(
+        subject=subject,
+        body=body,
+        from_email='acvh@accracentralviewhotels.com',
+        to=[user.email],
+    )
+
+    # Attach PDF
+    email.attach(f"receipt_{booking.invoice_number or booking.id}.pdf", pdf_file.read(), 'application/pdf')
+
+    # Send it
+    email.send(fail_silently=False)
 
 
+
+# Function to send email
+def send_notification_email(request, user, subject, template, context):
+    if not user.wants_emails:
+        return  # Respect the user's preference
+
+    domain = get_current_site(request).domain
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    unsubscribe_link = f"http://{domain}/unsubscribe/{uid}/"
+
+    context['unsubscribe_link'] = unsubscribe_link
+
+    html_message = render_to_string(template, context)
+    plain_message = strip_tags(html_message)
+
+    send_mail(
+        subject,
+        plain_message,
+        'acvh@accracentralviewhotels.com',
+        [user.email],
+        html_message=html_message,
+        fail_silently=False
+    )
+
+
+# View to activate account
 def activate_account(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
@@ -87,7 +175,7 @@ def activate_account(request, uidb64, token):
         messages.error(request, "Invalid or expired activation link.")
         return redirect("register")
 
-
+# View to register
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -109,7 +197,7 @@ def register(request):
     return render(request, 'main/register.html', {'form': form, "hide_nav": True})
 
 
-
+# View to login
 def login_view(request):
     if request.method == 'POST':
         form = CustomLoginForm(data=request.POST)
@@ -177,6 +265,7 @@ def inquiry_list(request):
     unread_count = inquiries.filter(is_read=False).count() 
     return render(request, 'main/user_inquiries.html', {'inquiries': inquiries, 'unread_count': unread_count}) 
 
+# view to book a room
 @login_required
 def book_room(request, room_id):
     room = Room.objects.get(id=room_id)
@@ -202,7 +291,7 @@ def book_room(request, room_id):
     messages.info(request, "Check-in time: 12:00 PM | Check-out time: 12:00 PM(The folowing day) Please note that regardless of your check-in time, check-out time is required by 12:00 Noon.")
     return render(request, 'main/booking.html', {'room': room, 'form': form})
 
-
+# view to update a booking
 @login_required
 def update_booking(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id, user=request.user)
@@ -258,6 +347,7 @@ def reception_dashboard(request):
         'notifications': notifications, 
         'bookings': booking})
 
+# view to send an inquiry
 @login_required
 def send_inquiry(request):
     if request.method == "POST":
@@ -273,6 +363,7 @@ def send_inquiry(request):
     
     return render(request, "main/send_inquiry.html", {"form": form})
 
+# view to respond to an inquiry
 @login_required
 def respond_inquiry(request, inquiry_id):
     user_role = request.user.role.lower()
@@ -294,7 +385,7 @@ def respond_inquiry(request, inquiry_id):
 
     return render(request, 'main/respond_inquiry.html', {'inquiry': inquiry, 'form': form})
 
-
+# view to toggle user status
 @login_required
 def toggle_user_status(request, user_id):
     user = get_object_or_404(CustomUser, id=user_id)
@@ -305,7 +396,7 @@ def toggle_user_status(request, user_id):
 
 
 
-
+# view to send a notification
 @login_required
 def send_notification(request):
     if request.method == "POST":
@@ -338,6 +429,7 @@ def send_notification(request):
     
     return redirect('reception_dashboard')
 
+# view to delete a booking by manager
 @login_required
 def staff_delete(request, booking_id):
     if request.method == 'POST':
@@ -350,6 +442,7 @@ def staff_delete(request, booking_id):
     else:
         return HttpResponseForbidden("Invalid request method.")
 
+# view to respond to an inquiry
 @login_required
 def respond_inquiry(request, inquiry_id):
     user_role = request.user.role.lower()
@@ -373,6 +466,8 @@ def respond_inquiry(request, inquiry_id):
 
     return render(request, 'main/respond_inquiry.html', {'inquiry': inquiry, 'form': form})
 
+
+# view to archive an inquiry
 @login_required
 def archive_inquiry(request, inquiry_id):
     inquiry = get_object_or_404(Inquiry, id=inquiry_id)
@@ -384,7 +479,7 @@ def archive_inquiry(request, inquiry_id):
     messages.success(request, "Inquiry archived!")
     return redirect('reception_dashboard')
 
-
+# view to unarchive an inquiry
 @login_required
 def unarchive_inquiry(request, inquiry_id):
     inquiry = get_object_or_404(Inquiry, id=inquiry_id)
@@ -396,6 +491,7 @@ def unarchive_inquiry(request, inquiry_id):
     messages.success(request, "Inquiry unarchived!")
     return redirect('reception_dashboard')
 
+# view to delete an inquiry
 @login_required
 def delete_inquiry(request, inquiry_id):
     inquiry = get_object_or_404(Inquiry, id=inquiry_id)
@@ -406,7 +502,7 @@ def delete_inquiry(request, inquiry_id):
     messages.success(request, "Inquiry deleted successfully!")
     return redirect('reception_dashboard')
 
-
+# view to archive a notification
 @login_required
 def archive_notification(request, notification_id):
     notifications = get_object_or_404(Notification, id=notification_id) 
@@ -418,6 +514,7 @@ def archive_notification(request, notification_id):
     messages.success(request, "Notification archived!")
     return redirect('reception_dashboard')
 
+# view to create a notification
 @login_required
 def new_notifications(request):
     if request.user.role.lower() not in ['manager', 'receptionist']:
@@ -427,6 +524,7 @@ def new_notifications(request):
     archived_notifications = Notification.objects.filter(is_archived=True)
     return render(request, 'main/archived_notifications.html', {'archived_notifications': archived_notifications})
 
+# view to unarchive a notification
 @login_required
 def unarchive_notification(request, notification_id):
     notification = get_object_or_404(Notification, id=notification_id)
@@ -440,7 +538,7 @@ def unarchive_notification(request, notification_id):
     messages.success(request, "Notification unarchived!")
     return redirect('reception_dashboard')
 
-
+# view to list notifications
 @login_required
 def notifications_list(request):
     notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
@@ -449,7 +547,7 @@ def notifications_list(request):
         return JsonResponse({'unread_count': unread_count})
     return render(request, 'main/notifications_list.html', {'notifications': notifications, 'unread_count': unread_count})
 
-
+# view to mark a notification as read
 @login_required
 def mark_as_read(request, notification_id):
     notification = get_object_or_404(Notification, id=notification_id)
@@ -458,7 +556,7 @@ def mark_as_read(request, notification_id):
     return redirect('notifications_list')
 
 
-
+# view to delete a notification
 @login_required
 def delete_notification(request, notification_id):
     notifications = get_object_or_404(Notification, id=notification_id) 
@@ -469,7 +567,7 @@ def delete_notification(request, notification_id):
     messages.success(request, "Notification deleted!")
     return redirect('reception_dashboard')
 
-
+# view to delete a guest inquiry
 @login_required
 def delete_guest_inquiry(request, inquiry_id):
     inquiry = get_object_or_404(Inquiry, id=inquiry_id, user=request.user)
@@ -477,7 +575,7 @@ def delete_guest_inquiry(request, inquiry_id):
     messages.success(request, "Inquiry deleted successfully!")
     return redirect('inquiry_list')
 
-
+# view to update profile
 @login_required
 def update_profile(request):
     user = request.user
@@ -491,7 +589,7 @@ def update_profile(request):
         form = UserUpdateForm(instance=user)
     return render(request, "main/profile_update.html", {"form": form})
 
-
+# view to change password
 @login_required
 def change_password(request):
     if request.method == "POST":

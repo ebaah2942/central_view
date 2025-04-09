@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import uuid
 
 # Create your models here.
 
@@ -14,6 +15,7 @@ class CustomUser(AbstractUser):
     phone_number = models.CharField(max_length=20)
     address = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
+    wants_emails = models.BooleanField(default=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -34,6 +36,10 @@ class Booking(models.Model):
     check_in = models.DateField()
     check_out = models.DateField()
     quantity = models.PositiveIntegerField(default=1)
+    is_paid = models.BooleanField(default=False)
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0.0, blank=True, null=True)
+    invoice_number = models.CharField(max_length=100, unique=True, blank=True, null=True)
+    receipt_sent = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def get_total_price(self):

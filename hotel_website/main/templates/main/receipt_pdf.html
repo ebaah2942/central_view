@@ -1,0 +1,59 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Booking Receipt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            color: #004080;
+            margin-bottom: 40px;
+        }
+        .details {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .details h2 {
+            margin-top: 0;
+        }
+        .row {
+            margin-bottom: 10px;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Accra Central View Hotel</h1>
+        <h3>Booking Receipt</h3>
+        <h3><strong>Invoice Number:</strong> {{ booking.invoice_number }}</h3>
+    </div>
+
+    <div class="details">
+        <div class="row"><strong>Guest:</strong> {{ booking.user.username }}</div>
+        <div class="row"><strong>Room:</strong> {{ booking.room }}</div>
+        <div class="row"><strong>Check-in:</strong> {{ booking.check_in }}</div>
+        <div class="row"><strong>Check-out:</strong> {{ booking.check_out }}</div>
+        <div class="row"><strong>Status:</strong> {% if booking.is_paid %}Paid{% else %}Not Paid{% endif %}</div>
+        <div class="row"><strong>Amount Paid:</strong> GH₵{{ booking.amount_paid|default:'0.00' }}</div>
+        <div class="row"><strong>Date Issued:</strong> {{ booking.created_at }}</div>
+    </div>
+
+    <div class="footer">
+        Thank you for booking with us. For assistance, call +233 59 433 2382 / +233 30 223 1759
+    </div>
+</body>
+</html>

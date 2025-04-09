@@ -18,6 +18,18 @@
             <p>Number of days: {{ booking.num_of_day }}</p>
             <p>Quantity: {{ booking.quantity }}</p>
             <p>Total Price: GHS {{ booking.get_total_price }}</p>
+           
+
+            {% if booking.is_paid %}
+                <!-- View Only -->
+                <a style="text-decoration: none; color: green;" href="{% url 'generate_receipt_pdf' booking.id %}" target="_blank">View Receipt</a>
+
+                <!-- Download -->
+                <a style="text-decoration: none; color: green;" href="{% url 'generate_receipt_pdf' booking.id %}?download=true">Download Receipt</a>
+
+            {% else %}
+                <p><em>Receipt will be available after payment</em></p>
+            {% endif %}
             <p style="color: red; font-weight: bold; font-style: italic;">Kindly call to confirm availability and make payment: 📞 +233 59 433 2382/+233 30 223 1759</p> 
             <p>Do you want to add another booking? <a style="text-decoration: none; color: green;" href="{% url 'rooms' %}"><i class="fas fa-plus"></i> Book Now</a></p> 
             <a href="{% url 'update_booking' booking.id %}" class="btn btn-warning"><i class="fas fa-edit"></i> Update</a>

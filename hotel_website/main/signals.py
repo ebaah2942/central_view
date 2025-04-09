@@ -1,19 +1,42 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
+from .models import CustomUser
 from django.core.mail import send_mail
 from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.utils.html import strip_tags
+from django.template.loader import render_to_string
 from .models import Booking, Inquiry, Notification
+from django.db.models.signals import pre_save
+import uuid
+from .views import email_receipt
+
 
 # Utility function to send emails
-def send_notification_email(subject, message, recipient_email):
-    send_mail(
-        subject,
-        message,
-        settings.DEFAULT_FROM_EMAIL,
-        [recipient_email],
-        fail_silently=False,
-    )
+
+def send_notification_email(subject, message, recipient_email, request=None):
+    user = CustomUser.objects.filter(email=recipient_email).first()
+    if user and user.wants_emails:
+
+        unsubscribe_link = ""
+        if request:
+            domain = get_current_site(request).domain
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            unsubscribe_link = f"http://{domain}/unsubscribe/{uid}/"
+
+        # Build full message with optional unsubscribe link
+        full_message = f"{message}\n\nIf you no longer want to receive these emails, you can unsubscribe here: {unsubscribe_link}" if unsubscribe_link else message
+
+        send_mail(
+            subject,
+            strip_tags(full_message),
+            settings.DEFAULT_FROM_EMAIL,
+            [recipient_email],
+            fail_silently=False,
+        )
 
 # 1️⃣ Send Welcome Email After User Registers
 @receiver(post_save, sender=User)
@@ -58,19 +81,51 @@ def notify_admin_new_inquiry(sender, instance, created, **kwargs):
         message = f"A new inquiry has been submitted by {instance.user.username}.\n\nMessage: {instance.message}\n\nPlease review it in the admin panel."
         send_notification_email(subject, message, ADMIN_EMAIL)   
 
-
-
+# 3️⃣ Notify Users When a New Notification is Created
 @receiver(post_save, sender=Notification)
 def send_email_notification(sender, instance, created, **kwargs):
-
     """
     Sends an email when a new notification is created.
+    Includes unsubscribe link if the user prefers emails.
     """
-    if created:  # Only send email for new notifications
-        send_mail(           
+    if created and instance.user.wants_emails:
+        user = instance.user
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+        # Safely get the domain
+        try:
+            domain = get_current_site(None).domain
+        except:
+            domain = 'accracentralviewhotels.com'  # fallback domain
+
+        unsubscribe_link = f"http://{domain}/unsubscribe/{uid}/"
+
+        # Build the message with unsubscribe
+        full_message = (
+            f"Hello {user.username},\n\n"
+            f"{instance.message}\n\n"
+            f"If you no longer want to receive these emails, you can unsubscribe here:\n{unsubscribe_link}"
+        )
+
+        send_mail(
             "New Notification from Accra Central View Hotel",
-            f"Hello {instance.user.username},\n\n{instance.message}",
+            full_message,
             settings.DEFAULT_FROM_EMAIL,
-            [instance.user.email],
+            [user.email],
             fail_silently=False,
         )
+
+# 4️⃣ Generate Invoice Number
+@receiver(pre_save, sender=Booking)
+def generate_invoice_number(sender, instance, **kwargs):
+    if instance.is_paid and not instance.invoice_number:
+        instance.invoice_number = f"INV-{uuid.uuid4().hex[:8].upper()}"  
+
+# 5️⃣ Send Email Receipt
+@receiver(post_save, sender=Booking)
+def send_receipt_email(sender, instance, **kwargs):
+    if instance.is_paid and not instance.receipt_sent:
+        email_receipt(instance.user, instance)
+        instance.receipt_sent = True
+        instance.save()        
+              

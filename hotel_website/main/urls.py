@@ -41,6 +41,9 @@ urlpatterns = [
     path('notifications/archived/', views.new_notifications, name='new_notifications'),
     path("notifcation-list/", views.notifications_list, name="notifications_list"),
     path('notifications/read/<int:notification_id>/', views.mark_as_read, name='mark_as_read'),
+    path('unsubscribe/<uidb64>/', views.unsubscribe_view, name='unsubscribe'),
+    path('receipt/pdf/<int:booking_id>/', views.generate_receipt_pdf, name='generate_receipt_pdf'),
+
    
 
 ]
