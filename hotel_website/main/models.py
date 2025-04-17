@@ -20,6 +20,21 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+
+class RoomCategory(models.Model):
+    CATEGORY_CHOICES = [
+        ('King-size Room', 'King-size Room'),
+        ('Double Room', 'Double Room'),
+        ('Single Room', 'Single Room'),
+    ]
+    category = models.CharField(max_length=100, choices=CATEGORY_CHOICES)
+    total_rooms = models.PositiveIntegerField(default=0)
+    available_rooms = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.get_category_display()}"
+
+
 class Room(models.Model):
     name = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -27,12 +42,18 @@ class Room(models.Model):
     image = models.ImageField(upload_to='rooms/', null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     capacity = models.IntegerField(default=1)
+    types = models.ForeignKey(RoomCategory, on_delete=models.CASCADE)
+    availability = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.name    
+        return f"{self.types}"   
+
+
+
 class Booking(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    category = models.ForeignKey(RoomCategory, on_delete=models.CASCADE, null=True, blank=True)
     check_in = models.DateField()
     check_out = models.DateField()
     quantity = models.PositiveIntegerField(default=1)
@@ -40,6 +61,7 @@ class Booking(models.Model):
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0.0, blank=True, null=True)
     invoice_number = models.CharField(max_length=100, unique=True, blank=True, null=True)
     receipt_sent = models.BooleanField(default=False)
+    is_checked_out = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def get_total_price(self):
@@ -47,7 +69,7 @@ class Booking(models.Model):
 
 
     def __str__(self):
-        return f"{self.user.username} - {self.check_in} to {self.check_out}" 
+        return f"{self.user.username} - {self.check_in} to {self.check_out} ({self.category.category})" 
 
 class Amenity(models.Model):
     name = models.CharField(max_length=100)

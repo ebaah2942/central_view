@@ -95,3 +95,12 @@ class ChangePasswordForm(PasswordChangeForm):
         model = CustomUser
         fields = ["old_password", "new_password1", "new_password2"]
                   
+
+
+class EmailPreferenceForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['wants_emails']
+        labels = {
+            'wants_emails': 'I want to receive email notifications',
+        }                  

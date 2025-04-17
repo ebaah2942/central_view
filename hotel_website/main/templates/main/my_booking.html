@@ -30,14 +30,23 @@
             {% else %}
                 <p><em>Receipt will be available after payment</em></p>
             {% endif %}
-            <p style="color: red; font-weight: bold; font-style: italic;">Kindly call to confirm availability and make payment: 📞 +233 59 433 2382/+233 30 223 1759</p> 
+            <p style="color: red; font-weight: bold; font-style: italic;">Kindly call to confirm availability and make payment: +233 59 433 2382/+233 30 223 1759</p> 
             <p>Do you want to add another booking? <a style="text-decoration: none; color: green;" href="{% url 'rooms' %}"><i class="fas fa-plus"></i> Book Now</a></p> 
             <a href="{% url 'update_booking' booking.id %}" class="btn btn-warning"><i class="fas fa-edit"></i> Update</a>
             <form action="{% url 'delete_booking' booking.id %}" method="post" onsubmit="return confirmDelete()" style="display:inline;">
                 {% csrf_token %}
                 <button class="btn btn-danger" style="margin-left: 10px;" type="submit" onclick="confirmDelete(event, '{{ booking.id }}')">Delete</button>
             </form>
-            <p style="text-align: right; font-style: italic; font-weight: bold; font-size: 12px">{{ booking.created_at }}</p>  
+            <p style="text-align: right; font-style: italic; font-weight: bold; font-size: 12px">{{ booking.created_at }}</p> 
+            {% if not booking.is_checked_out %}
+                <form method="post" action="{% url 'checkout_booking' booking.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning btn-sm">Checkout</button>
+                </form>
+            {% else %}
+                <span class="badge bg-success">Checked Out</span>
+            {% endif %}
+ 
         </div>
         <hr>
         

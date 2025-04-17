@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from . models import Room, Amenity, Booking, Inquiry, Notification, CustomUser, Inquiry
+from . models import Room, Amenity, Booking, Inquiry, Notification, CustomUser, Inquiry, RoomCategory
 from django.contrib.auth.decorators import login_required, permission_required
-from . forms import BookingForm, CustomUserCreationForm, CustomLoginForm, InquiryForm, ResponseForm, UserUpdateForm, ChangePasswordForm
+from . forms import BookingForm, CustomUserCreationForm, CustomLoginForm, InquiryForm, ResponseForm, UserUpdateForm, ChangePasswordForm, EmailPreferenceForm 
 from django.contrib.auth import login
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
@@ -35,6 +35,8 @@ import weasyprint
 from django.core.mail import EmailMessage
 from weasyprint import HTML
 from io import BytesIO   
+from django.utils.timezone import now
+from django.db import models
 
 
 
@@ -51,10 +53,31 @@ def privacy_policy(request):
     return render(request, 'main/privacy.html')
 
 
+
 def rooms(request):
-    all_rooms = Room.objects.all().order_by('price')
+    all_rooms = Room.objects.select_related('types').order_by('price')
+    all_categories = RoomCategory.objects.all()
+    today = now().date()
+    bookings_today = Booking.objects.filter(created_at__date=today).count()
+
+    for category in all_categories:
+        total = category.total_rooms
+        booked = Booking.objects.filter(category=category).count()
+        category.available_rooms = max(total - booked, 0)
+
+
+    for room in all_rooms:
+        total = room.types.total_rooms
+        booked = Booking.objects.filter(category=room.types).count()
+        room.available_rooms = total - booked
+
     messages.info(request, "Check-in time: 12:00 PM | Check-out time: 12:00 PM(The folowing day) Please note that regardless of your check-in time, check-out time is required by 12:00 Noon.")
-    return render(request, 'main/rooms.html' , {'rooms': all_rooms})
+    return render(request, 'main/rooms.html', {
+        'rooms': all_rooms,
+        'types': all_categories,
+        'bookings_today': bookings_today,
+    })
+
 
 def amenity(request):
     all_amenities = Amenity.objects.all()
@@ -224,12 +247,15 @@ def login_view(request):
 def delete_booking(request, booking_id):
     try:
         booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+        category = booking.room.types
     except Booking.DoesNotExist:
         messages.error(request, "Booking not found or you do not have permission to delete this booking")
         return redirect('booking_list')
 
     if request.method == 'POST':
         try:
+            category.available_rooms += booking.quantity
+            category.save()
             booking.delete()
             messages.success(request, "Booking deleted successfully")
             print(list(messages.get_messages(request)))
@@ -265,58 +291,84 @@ def inquiry_list(request):
     unread_count = inquiries.filter(is_read=False).count() 
     return render(request, 'main/user_inquiries.html', {'inquiries': inquiries, 'unread_count': unread_count}) 
 
-# view to book a room
+
+
+
 @login_required
 def book_room(request, room_id):
     room = Room.objects.get(id=room_id)
+    category = room.types  
+
     if request.method == 'POST':
         form = BookingForm(request.POST)
         if form.is_valid():
             quantity = form.cleaned_data.get('quantity')
-            if room.name in ['King-Size', 'Double-Room'] and quantity > 8:
-                messages.error(request, "You cannot book more than 8 King-size or Double rooms.")
-            elif room.name == 'Single-Room' and quantity > 20:
-                messages.error(request, "You cannot book more than 20 Single rooms.")            
-            elif quantity > 0:
+
+            # Total booked so far for this category
+            total_booked = Booking.objects.filter(category=category).count()
+            available_rooms = category.total_rooms - total_booked
+
+            if quantity <= 0:
+                messages.error(request, "Quantity must be greater than 0.")
+            elif quantity > available_rooms:
+                messages.error(request, f"Only {available_rooms} rooms available for {category.category}.")
+            else:
                 booking = form.save(commit=False)
                 booking.user = request.user
                 booking.room = room
+                booking.category = category
                 booking.save()
-                messages.success(request, f'Booking successful for {quantity} {room.name}')
+                
+                messages.success(request, f'Booking successful for {quantity} {room.name}(s)')
                 return redirect('booking_list')
-            else:
-                messages.error(request, "Quantity must be greater than 0.")
     else:
         form = BookingForm()
-    messages.info(request, "Check-in time: 12:00 PM | Check-out time: 12:00 PM(The folowing day) Please note that regardless of your check-in time, check-out time is required by 12:00 Noon.")
-    return render(request, 'main/booking.html', {'room': room, 'form': form})
 
-# view to update a booking
+    messages.info(request, "Check-in time: 12:00 PM | Check-out time: 12:00 PM(The folowing day) Please note that regardless of your check-in time, check-out time is required by 12:00 Noon.")
+    return render(request, 'main/booking.html', {
+        'room': room,
+        'form': form,
+    })
+
+
+
 @login_required
 def update_booking(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id, user=request.user)
-    room = booking.room  # Get the associated room
+    room = booking.room
+    category = room.types
 
     if request.method == 'POST':
         form = BookingForm(request.POST, instance=booking)
         if form.is_valid():
-            quantity = form.cleaned_data.get('quantity')
+            new_quantity = form.cleaned_data.get('quantity')
+            old_quantity = booking.quantity
 
-            # Check quantity limits based on room type
-            if room.name in ['King-Size', 'Double-Room'] and quantity > 8:
-                messages.error(request, "You cannot book more than 8 King-size or Double rooms.")
-            elif room.name == 'Single-Room' and quantity > 20:
-                messages.error(request, "You cannot book more than 20 Single rooms.")
-            elif quantity > 0:
-                form.save()
-                messages.success(request, "Your booking has been updated successfully.")
-                return redirect('booking_list')  # Redirect to the booking list page
-            else:
+            # Total booked excluding current booking
+            total_booked_excluding_current = Booking.objects.filter(category=category).exclude(id=booking.id).aggregate(models.Sum('quantity'))['quantity__sum'] or 0
+            available_rooms = category.total_rooms - total_booked_excluding_current
+
+            if new_quantity <= 0:
                 messages.error(request, "Quantity must be greater than 0.")
+            elif new_quantity > available_rooms:
+                messages.error(request, f"Only {available_rooms} rooms available for {category.category}.")
+            else:
+                updated_booking = form.save(commit=False)
+                updated_booking.user = request.user
+                updated_booking.room = room
+                updated_booking.category = category
+                updated_booking.save()
+
+                messages.success(request, "Your booking has been updated successfully.")
+                return redirect('booking_list')
     else:
         form = BookingForm(instance=booking)
 
-    return render(request, 'main/update_booking.html', {'form': form, 'booking': booking})
+    return render(request, 'main/update_booking.html', {
+        'form': form,
+        'booking': booking
+    })
+
 
 
 # administrative page
@@ -339,7 +391,7 @@ def reception_dashboard(request):
             Notification.objects.create(user=user, message=message)
             messages.success(request, "Notification sent successfully.")
             return redirect('reception_dashboard')
-        print("Notifications:", notifications)
+        # print("Notifications:", notifications)
     return render(request, 'main/receptionist_dashboard.html', {
         'user_role': user_role, 
         'inquiries': inquiries, 
@@ -604,6 +656,38 @@ def change_password(request):
     return render(request, "main/change_password.html", {"form": form})
 
 
+@login_required
+def manage_email_preferences(request):
+    user = request.user
+    form = EmailPreferenceForm(request.POST or None, instance=user)
 
-   
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return render(request, 'main/preferences_updated.html')  # optional success page
+
+    return render(request, 'main/manage_email_preferences.html', {'form': form})
+
+
+
+@login_required
+def checkout_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    room = booking.room
+    category = room.types if room else None
+
+    if not booking.is_checked_out:
+        booking.is_checked_out = True
+        booking.save()
+
+        if category:
+            category.available_rooms += 1
+            category.save()
+            messages.success(request, f"{room.name} successfully checked out.")
+        else:
+            messages.warning(request, "Checkout recorded, but no room category found to update availability.")
+    else:
+        messages.info(request, "This booking has already been checked out.")
+
+    return redirect('booking_list')
+
 

@@ -13,6 +13,8 @@ from .models import Booking, Inquiry, Notification
 from django.db.models.signals import pre_save
 import uuid
 from .views import email_receipt
+from django.db.models.signals import post_delete
+from django.utils.timezone import now
 
 
 # Utility function to send emails
@@ -70,7 +72,7 @@ ADMIN_EMAIL = "acvh@accracentralviewhotels.com"
 def notify_admin_new_booking(sender, instance, created, **kwargs):
     if created:
         subject = "New Booking Received"
-        message = f"A new booking has been made by {instance.user.username}.\n\nRoom: {instance.room}\nCheck-in: {instance.check_in}\nCheck-out: {instance.check_out}\n\nPlease review it in the admin panel."
+        message = f"A new booking has been made by {instance.user.username}.\n\nRoom: {instance.room}\nQuantity: {instance.quantity}\nRoom Type: {instance.room.types.category}\nCheck-in: {instance.check_in}\nCheck-out: {instance.check_out}\n\nPlease review it in the admin panel."
         send_notification_email(subject, message, ADMIN_EMAIL)
 
 # 2️⃣ Notify Admin When a New Inquiry is Submitted
@@ -97,14 +99,18 @@ def send_email_notification(sender, instance, created, **kwargs):
             domain = get_current_site(None).domain
         except:
             domain = 'accracentralviewhotels.com'  # fallback domain
+       
+        manage_link = f"http://{domain}/preferences/email/"
 
-        unsubscribe_link = f"http://{domain}/unsubscribe/{uid}/"
+        # unsubscribe_link = f"http://{domain}/unsubscribe/{uid}/"
 
         # Build the message with unsubscribe
         full_message = (
             f"Hello {user.username},\n\n"
             f"{instance.message}\n\n"
-            f"If you no longer want to receive these emails, you can unsubscribe here:\n{unsubscribe_link}"
+            f"If you want to update your email settings, visit: {manage_link}"
+
+            # f"If you no longer want to receive these emails, you can unsubscribe here:\n{unsubscribe_link}"
         )
 
         send_mail(
@@ -129,3 +135,11 @@ def send_receipt_email(sender, instance, **kwargs):
         instance.receipt_sent = True
         instance.save()        
               
+
+@receiver(post_delete, sender=Booking)
+def restore_available_room(sender, instance, **kwargs):
+    # Only increase availability if check-out is in the past
+    if instance.check_out and instance.check_out <= now().date():
+        category = instance.room.types
+        category.available_rooms += 1
+        category.save()              

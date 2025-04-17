@@ -225,6 +225,7 @@ a:hover {
                         <th>Booking Date</th>
                         {% if request.user.role|lower == "manager" or request.user.role|lower == "receptionist" %}
                         <th>Action</th>
+                        <th>Checkout</th>
                         {% endif %}
                     </tr>
                 </thead>

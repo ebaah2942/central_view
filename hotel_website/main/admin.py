@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Room, Amenity, Booking, CustomUser
+from .models import Room, Amenity, Booking, CustomUser, RoomCategory, Inquiry, Notification
 from django.contrib.auth.admin import UserAdmin
 
 # Register your models here.
@@ -34,5 +34,8 @@ class BookingAdmin(admin.ModelAdmin):
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Room)
 admin.site.register(Amenity)
+admin.site.register(RoomCategory)
+admin.site.register(Inquiry)
+admin.site.register(Notification)
 
 

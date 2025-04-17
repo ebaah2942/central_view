@@ -43,6 +43,9 @@ urlpatterns = [
     path('notifications/read/<int:notification_id>/', views.mark_as_read, name='mark_as_read'),
     path('unsubscribe/<uidb64>/', views.unsubscribe_view, name='unsubscribe'),
     path('receipt/pdf/<int:booking_id>/', views.generate_receipt_pdf, name='generate_receipt_pdf'),
+    path('preferences/email/', views.manage_email_preferences, name='manage_email_preferences'),
+    path('checkout/<int:booking_id>/', views.checkout_booking, name='checkout_booking'),
+
 
    
 

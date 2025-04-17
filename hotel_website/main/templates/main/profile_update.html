@@ -14,6 +14,20 @@
             <button type="submit">Save Changes</button>
         </form>
         <a href="{% url 'change_password' %}">Change Password</a>
+        <p>
+            Email Notifications: 
+            {% if user.wants_emails %}
+                ✅ Subscribed
+            {% else %}
+                ❌ Unsubscribed
+            {% endif %}
+        </p>
+        
+        <a href="{% url 'manage_email_preferences' %}" class="btn btn-sm btn-outline-primary">
+            Manage Email Preferences
+        </a>
+
+        
 
     </div>
 

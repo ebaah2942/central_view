@@ -33,7 +33,7 @@ def custom_password_reset_request(request):
                 # Send the email
                 send_mail(
                     "Reset Your Password",
-                    f"Click the link to reset your password: {reset_url}",
+                    f"Click the link to reset your password: {reset_url} \n\nIf you did not request this, please ignore this email. \n\nThanks, \nAccra Central View Hotel Team",
                     "acvh@accracentralviewhotels.com",
                     [email],
                     fail_silently=False,
