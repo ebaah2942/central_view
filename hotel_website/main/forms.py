@@ -1,5 +1,5 @@
 from django import forms
-from .models import Booking, CustomUser, Room, Inquiry
+from .models import Booking, CustomUser, Room, Inquiry, Review
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
@@ -104,3 +104,11 @@ class EmailPreferenceForm(forms.ModelForm):
         labels = {
             'wants_emails': 'I want to receive email notifications',
         }                  
+
+
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['rating', 'comment']        

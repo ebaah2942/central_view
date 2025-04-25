@@ -12,6 +12,8 @@ logs/
 
 secrets.json
 
+credentials.json
+
 venv/
 env/
 *.hotel/

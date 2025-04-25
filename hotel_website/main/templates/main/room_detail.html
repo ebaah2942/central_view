@@ -1,0 +1,27 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<div class="container py-4">
+  
+    <h2>{{ room.name }}</h2>
+    <p><strong>Category:</strong> {{ room.types.category }}</p>
+    <p><strong>Price:</strong> GHS {{ room.price }}</p>
+    <p><strong>Description:</strong> {{ room.description }}</p>
+  <p><strong>Average Rating:</strong> {{ average_rating|floatformat:1 }} / 5</p>
+
+  <a href="{% url 'leave_review' room.id %}" class="btn btn-outline-primary my-3">Leave a Review</a>
+
+  <h4 class="mt-4">User Reviews:</h4>
+  {% for review in reviews %}
+    <div class="border p-2 rounded my-2">
+      <p><strong>{{ review.user.username }}</strong> rated {{ review.rating }} / 5</p>
+      <p>{{ review.comment }}</p>
+      <a href="{% url 'update_review' room.id review.id %}" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+      <a href="{% url 'delete_review' room.id review.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+      <small class="text-muted">{{ review.created_at }}</small>
+    </div>
+  {% empty %}
+    <p>No reviews yet.</p>
+  {% endfor %}
+</div>
+
+{% endblock %}

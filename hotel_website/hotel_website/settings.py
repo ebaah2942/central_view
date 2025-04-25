@@ -17,6 +17,8 @@ from django.contrib.messages import constants as messages
 from dotenv import load_dotenv
 from django.urls import reverse_lazy
 from django.contrib.messages import constants as messages
+from google.oauth2 import service_account
+from decouple import config
 
 load_dotenv()
 
@@ -51,6 +53,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'storages',
     'channels',
+    'widget_tweaks',
     
 ]
 
@@ -158,22 +161,14 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 STATICFILES_STORAGE='whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-AWS_STORAGE_BUCKET_NAME = "myacvhbucket"
-AWS_S3_REGION_NAME = "eu-north-1"  # Change this to your region
-AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
-AWS_DEFAULT_ACL = "public-read"
+
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 
 
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-
-STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles") 
 
-
-MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
 
 CHANNEL_LAYERS = {
     "default": {
@@ -229,3 +224,28 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
     messages.ERROR: 'error',
 }
+GS_PROJECT_ID = config("GS_PROJECT_ID")
+GS_BUCKET_NAME = config("GS_BUCKET_NAME")
+GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+
+
+credentials = service_account.Credentials.from_service_account_file(
+    GOOGLE_APPLICATION_CREDENTIALS,
+    scopes=["https://www.googleapis.com/auth/cloud-platform"]
+)
+
+
+
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+
+
+STATIC_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/static/'
+MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'
+
+
+if DEBUG:
+    STATIC_URL = '/static/'
+else:
+    STATIC_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/static/'
+    MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'

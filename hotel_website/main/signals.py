@@ -143,3 +143,7 @@ def restore_available_room(sender, instance, **kwargs):
         category = instance.room.types
         category.available_rooms += 1
         category.save()              
+
+
+
+

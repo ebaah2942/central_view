@@ -1,0 +1,32 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Update Review{% endblock %}
+
+{% block content %}
+<h5>Update Review</h5>
+<div class="container mt-5 p-4 rounded-4 shadow bg-light">
+    <h3 class="mb-4 text-center">Update Review for <span class="text-primary">{{ room.name }}</span></h3>
+  
+    <form method="POST">
+      {% csrf_token %}
+      
+      <div class="mb-3">
+        <label for="id_rating" class="form-label fw-semibold">Rating</label>
+        {{ form.rating|add_class:"form-select" }}
+      </div>
+  
+      <div class="mb-3">
+        <label for="id_comment" class="form-label fw-semibold">Comment</label>
+        {{ form.comment|add_class:"form-control" }}
+      </div>
+  
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary px-4">Submit Review</button>
+      </div>
+    </form>
+  </div> 
+
+
+{% endblock %}

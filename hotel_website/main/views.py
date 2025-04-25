@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from . models import Room, Amenity, Booking, Inquiry, Notification, CustomUser, Inquiry, RoomCategory
+from . models import Room, Amenity, Booking, Inquiry, Review, Notification, CustomUser, Inquiry, RoomCategory
 from django.contrib.auth.decorators import login_required, permission_required
-from . forms import BookingForm, CustomUserCreationForm, CustomLoginForm, InquiryForm, ResponseForm, UserUpdateForm, ChangePasswordForm, EmailPreferenceForm 
+from . forms import BookingForm, CustomUserCreationForm, CustomLoginForm, InquiryForm, ResponseForm, UserUpdateForm, ChangePasswordForm, EmailPreferenceForm, ReviewForm 
 from django.contrib.auth import login
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
@@ -37,6 +37,8 @@ from weasyprint import HTML
 from io import BytesIO   
 from django.utils.timezone import now
 from django.db import models
+from django.db.models import Sum
+from django.db.models import Avg
 
 
 
@@ -44,10 +46,14 @@ from django.db import models
 def home(request):
     user_role = None
     room = Room.objects.first()
+    top_reviews = (
+        Review.objects.select_related('room', 'user')
+        .order_by('-rating', '-created_at')[:3]
+    )
     if request.user.is_authenticated:
         user_role = request.user.role
     messages.info(request, "Check-in time: 12:00 PM | Check-out time: 12:00 PM(The folowing day) Please note that regardless of your check-in time, check-out time is required by 12:00 Noon.")
-    return render(request, 'main/home.html', {'user_role': user_role , 'room': room})
+    return render(request, 'main/home.html', {'user_role': user_role , 'room': room, 'top_reviews': top_reviews})
 
 def privacy_policy(request):
     return render(request, 'main/privacy.html')
@@ -57,26 +63,42 @@ def privacy_policy(request):
 def rooms(request):
     all_rooms = Room.objects.select_related('types').order_by('price')
     all_categories = RoomCategory.objects.all()
+    reviews = Review.objects.filter(room=all_rooms [0])
+    average_rating = reviews.aggregate(Avg('rating'))['rating__avg']
     today = now().date()
     bookings_today = Booking.objects.filter(created_at__date=today).count()
 
+    # Calculate available_rooms for each category
     for category in all_categories:
         total = category.total_rooms
-        booked = Booking.objects.filter(category=category).count()
+        booked = Booking.objects.filter(category=category, is_checked_out=False).aggregate(
+            total=Sum('quantity')
+        )['total'] or 0
         category.available_rooms = max(total - booked, 0)
 
-
     for room in all_rooms:
-        total = room.types.total_rooms
-        booked = Booking.objects.filter(category=room.types).count()
-        room.available_rooms = total - booked
+        room.average_rating = room.review_set.aggregate(avg=Avg('rating'))['avg'] or 0
 
-    messages.info(request, "Check-in time: 12:00 PM | Check-out time: 12:00 PM(The folowing day) Please note that regardless of your check-in time, check-out time is required by 12:00 Noon.")
+    # Calculate available_rooms for each room
+    for room in all_rooms:
+        category = room.types
+        total = category.total_rooms
+        booked = Booking.objects.filter(category=category, is_checked_out=False).aggregate(
+            total=Sum('quantity')
+        )['total'] or 0
+        room.available_rooms = max(total - booked, 0)
+
+    messages.info(request, "Check-in time: 12:00 PM | Check-out time: 12:00 PM (The following day). Regardless of check-in time, check-out is required by 12:00 Noon.")
     return render(request, 'main/rooms.html', {
         'rooms': all_rooms,
         'types': all_categories,
         'bookings_today': bookings_today,
+        'average_rating': round(average_rating, 1) if average_rating else "No ratings yet",
+        'reviews': reviews
+
     })
+
+
 
 
 def amenity(request):
@@ -293,7 +315,6 @@ def inquiry_list(request):
 
 
 
-
 @login_required
 def book_room(request, room_id):
     room = Room.objects.get(id=room_id)
@@ -305,7 +326,8 @@ def book_room(request, room_id):
             quantity = form.cleaned_data.get('quantity')
 
             # Total booked so far for this category
-            total_booked = Booking.objects.filter(category=category).count()
+            # total_booked = Booking.objects.filter(category=category).count()
+            total_booked = Booking.objects.filter(category=category).aggregate(total=Sum('quantity'))['total'] or 0
             available_rooms = category.total_rooms - total_booked
 
             if quantity <= 0:
@@ -690,4 +712,76 @@ def checkout_booking(request, booking_id):
 
     return redirect('booking_list')
 
+
+
+@login_required
+def leave_review(request, room_id):
+    room = get_object_or_404(Room, id=room_id)
+
+    # Check if user has booked the room
+    has_booked = Booking.objects.filter(user=request.user, room=room).exists()
+
+    if not has_booked:
+        messages.error(request, "You can only review rooms you've booked.")
+        return redirect('rooms')
+
+    if Review.objects.filter(user=request.user, room=room).exists():
+        messages.warning(request, "You've already reviewed this room.")
+        return redirect('room_detail', room_id=room.id)
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
+            review.room = room
+            review.save()
+            messages.success(request, "Review submitted.")
+            return redirect('room_detail', room_id=room.id)
+    else:
+        form = ReviewForm()
+
+    return render(request, 'main/leave_review.html', {'form': form, 'room': room})
+
+
+def room_detail(request, room_id):
+    room = get_object_or_404(Room, id=room_id)
+    reviews = room.review_set.all()  # or use related_name='reviews' if set
+    average_rating = reviews.aggregate(avg=Avg('rating'))['avg']
+
+    return render(request, 'main/room_detail.html', {
+        'room': room,
+        'reviews': reviews,
+        'average_rating': average_rating or 0,
+    })
+
+
+
+
+
+def delete_review(request, room_id, review_id):
+    review = get_object_or_404(Review, id=review_id, room__id=room_id)
+
+    if request.user == review.user:
+        review.delete()
+        messages.success(request, "Review deleted successfully.")
+    else:
+        messages.error(request, "You are not authorized to delete this review.")
+    
+    return redirect('room_detail', room_id=room_id)
+
+
+
+@login_required
+def update_review(request, room_id, review_id):
+    review = get_object_or_404(Review, id=review_id, user=request.user, room_id=room_id)
+    if request.method == 'POST':
+        form = ReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Review updated successfully.")
+            return redirect('room_detail', room_id=room_id)
+    else:
+        form = ReviewForm(instance=review)
+    return render(request, 'main/update_review.html', {'form': form, 'review': review})
 

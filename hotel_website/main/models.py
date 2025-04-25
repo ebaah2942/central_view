@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import uuid
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 
@@ -107,3 +108,20 @@ class Notification(models.Model):
 
     def __str__(self):
         return self.message[:50]
+    
+
+
+    
+class Review(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+    class Meta:
+        unique_together = ('user', 'room')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.room.name} ({self.rating} stars)"    

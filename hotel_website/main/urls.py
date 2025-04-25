@@ -27,12 +27,10 @@ urlpatterns = [
     path("send-inquiry/", views.send_inquiry, name="send_inquiry"),
     path("respond-inquiry/<int:inquiry_id>/", views.respond_inquiry, name="respond_inquiry"),
     path("inquiry-list/", views.inquiry_list, name="inquiry_list"),
-    # path("delete-inquiry/<int:inquiry_id>/", views.delete_inquiry, name="delete_inquiry"),
     path("archive-inquiry/<int:inquiry_id>/", views.archive_inquiry, name="archive_inquiry"),
     path("unarchive-inquiry/<int:inquiry_id>/", views.unarchive_inquiry, name="unarchive_inquiry"),
     path("admin-inquiry-delete/<int:inquiry_id>/", views.delete_inquiry, name="delete_inquiry"),
     path("delete-guest-inquiry/<int:inquiry_id>/", views.delete_guest_inquiry, name="delete_guest_inquiry"),
-    # path("update-profile", views.update_profile, name="update_profile"),
     path("profile/", update_profile, name="profile"),
     path("change-password/", change_password, name="change_password"),
     path("archive-notification/<int:notification_id>/", views.archive_notification, name="archive_notification"),
@@ -45,6 +43,11 @@ urlpatterns = [
     path('receipt/pdf/<int:booking_id>/', views.generate_receipt_pdf, name='generate_receipt_pdf'),
     path('preferences/email/', views.manage_email_preferences, name='manage_email_preferences'),
     path('checkout/<int:booking_id>/', views.checkout_booking, name='checkout_booking'),
+    path('room/<int:room_id>/review/', views.leave_review, name='leave_review'),
+    path('rooms/<int:room_id>/', views.room_detail, name='room_detail'),
+    path('room/<int:room_id>/review/delete/<int:review_id>/', views.delete_review, name='delete_review'),
+    path('room/<int:room_id>/review/update/<int:review_id>/', views.update_review, name='update_review'),
+
 
 
    

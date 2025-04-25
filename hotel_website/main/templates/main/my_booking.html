@@ -6,60 +6,80 @@
 
 {% block content %}
 <h1>My Bookings</h1>
-<hr>
+<hr>   
+</div>
+    {% for booking in bookings %}
+<div class="container my-4">
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
 
-{% for booking in bookings %}
-    <div class="container-card">
-        <div class="adjo"> 
-            <h3>{{ forloop.counter }}. {{ booking.room.name }}</h3>
-            <p>Check-in: {{ booking.check_in }}</p>
-            <p>Check-out: {{ booking.check_out }}</p>
-            <p>Price per day: GHS {{ booking.room.price }}</p>
-            <p>Number of days: {{ booking.num_of_day }}</p>
-            <p>Quantity: {{ booking.quantity }}</p>
-            <p>Total Price: GHS {{ booking.get_total_price }}</p>
-           
+      <div class="row">
+        <div class="col-md-8">
+          <h5 class="card-title">{{ forloop.counter }}. {{ booking.room.name }}</h5>
+          <p class="mb-1"><strong>Check-in:</strong> {{ booking.check_in }}</p>
+          <p class="mb-1"><strong>Check-out:</strong> {{ booking.check_out }}</p>
+          <p class="mb-1"><strong>Price per day:</strong> GHS {{ booking.room.price }}</p>
+          <p class="mb-1"><strong>Number of days:</strong> {{ booking.num_of_day }}</p>
+          <p class="mb-1"><strong>Quantity:</strong> {{ booking.quantity }}</p>
+          <p class="mb-1"><strong>Total Price:</strong> GHS {{ booking.get_total_price }}</p>
 
+          <p class="mb-1"><strong>Status:</strong>
             {% if booking.is_paid %}
-                <!-- View Only -->
-                <a style="text-decoration: none; color: green;" href="{% url 'generate_receipt_pdf' booking.id %}" target="_blank">View Receipt</a>
-
-                <!-- Download -->
-                <a style="text-decoration: none; color: green;" href="{% url 'generate_receipt_pdf' booking.id %}?download=true">Download Receipt</a>
-
+              <a href="{% url 'generate_receipt_pdf' booking.id %}" target="_blank" class="text-success text-decoration-none">View Receipt</a> |
+              <a href="{% url 'generate_receipt_pdf' booking.id %}?download=true" class="text-success text-decoration-none">Download Receipt</a>
             {% else %}
-                <p><em>Receipt will be available after payment</em></p>
+              <span class="text-danger"><em>Receipt will be available after payment</em></span>
             {% endif %}
-            <p style="color: red; font-weight: bold; font-style: italic;">Kindly call to confirm availability and make payment: +233 59 433 2382/+233 30 223 1759</p> 
-            <p>Do you want to add another booking? <a style="text-decoration: none; color: green;" href="{% url 'rooms' %}"><i class="fas fa-plus"></i> Book Now</a></p> 
-            <a href="{% url 'update_booking' booking.id %}" class="btn btn-warning"><i class="fas fa-edit"></i> Update</a>
-            <form action="{% url 'delete_booking' booking.id %}" method="post" onsubmit="return confirmDelete()" style="display:inline;">
-                {% csrf_token %}
-                <button class="btn btn-danger" style="margin-left: 10px;" type="submit" onclick="confirmDelete(event, '{{ booking.id }}')">Delete</button>
-            </form>
-            <p style="text-align: right; font-style: italic; font-weight: bold; font-size: 12px">{{ booking.created_at }}</p> 
-            {% if not booking.is_checked_out %}
-                <form method="post" action="{% url 'checkout_booking' booking.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-warning btn-sm">Checkout</button>
-                </form>
-            {% else %}
-                <span class="badge bg-success">Checked Out</span>
-            {% endif %}
- 
+          </p>
+
+          <p class="text-danger fw-bold fst-italic mt-3">
+            Kindly call to confirm availability and make payment:<br> 
+            +233 59 433 2382 / +233 30 223 1759
+          </p>
+
+          <p>Do you want to add another booking? 
+            <a href="{% url 'rooms' %}" class="text-success text-decoration-none">
+              <i class="fas fa-plus"></i> Book Now
+            </a>
+          </p>
         </div>
-        <hr>
-        
-        {% empty %}
-        <p>You have no bookings.</p>
-{% endfor %}
-{% if page_obj.has_previous %}
-    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-{% endif %}
-{% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}">Next</a>
-{% endif %}    
+
+        <div class="col-md-4 text-md-end d-flex flex-column justify-content-between">
+          <div class="d-flex flex-column flex-md-row justify-content-md-end align-items-md-center gap-2 mb-3">
+            <a href="{% url 'update_booking' booking.id %}" class="btn btn-outline-primary">Update</a>
+
+            <form action="{% url 'delete_booking' booking.id %}" method="post" onsubmit="return confirmDelete()">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-danger" onclick="confirmDelete(event, '{{ booking.id }}')">Delete</button>
+            </form>
+
+            {% if not booking.is_checked_out %}
+              <a href="{% url 'checkout_booking' booking.id %}" class="btn btn-success">Checkout</a>
+            {% else %}
+              <span class="badge bg-secondary p-2">Checked Out</span>
+            {% endif %}
+          </div>
+
+          <p class="text-end text-muted fst-italic small mb-0">Created at: {{ booking.created_at }}</p>
+        </div>
+      </div>
+
     </div>
+  </div>
+</div>
+{% empty %}
+  <p class="text-center mt-5">You have no bookings.</p>
+{% endfor %}
+
+<div class="d-flex justify-content-center mt-4">
+  {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-secondary me-2">Previous</a>
+  {% endif %}
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-secondary">Next</a>
+  {% endif %}
+</div>
+
 <style>
 .adjo {
     padding: 20px; 
