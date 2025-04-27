@@ -44,6 +44,7 @@ from django.db.models import Avg
 
 # Create your views here.
 def home(request):
+    rooms = Room.objects.all().order_by('price')
     user_role = None
     room = Room.objects.first()
     top_reviews = (
@@ -53,7 +54,7 @@ def home(request):
     if request.user.is_authenticated:
         user_role = request.user.role
     messages.info(request, "Check-in time: 12:00 PM | Check-out time: 12:00 PM(The folowing day) Please note that regardless of your check-in time, check-out time is required by 12:00 Noon.")
-    return render(request, 'main/home.html', {'user_role': user_role , 'room': room, 'top_reviews': top_reviews})
+    return render(request, 'main/home.html', {'user_role': user_role , 'room': room, 'top_reviews': top_reviews, 'rooms': rooms})
 
 def privacy_policy(request):
     return render(request, 'main/privacy.html')
@@ -784,4 +785,3 @@ def update_review(request, room_id, review_id):
     else:
         form = ReviewForm(instance=review)
     return render(request, 'main/update_review.html', {'form': form, 'review': review})
-

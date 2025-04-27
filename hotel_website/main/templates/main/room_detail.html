@@ -15,8 +15,11 @@
     <div class="border p-2 rounded my-2">
       <p><strong>{{ review.user.username }}</strong> rated {{ review.rating }} / 5</p>
       <p>{{ review.comment }}</p>
-      <a href="{% url 'update_review' room.id review.id %}" class="btn btn-sm btn-outline-primary me-1">Edit</a>
-      <a href="{% url 'delete_review' room.id review.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+
+      {% if request.user == review.user %}
+        <a href="{% url 'update_review' room.id review.id %}" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+        <a href="{% url 'delete_review' room.id review.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+      {% endif %}
       <small class="text-muted">{{ review.created_at }}</small>
     </div>
   {% empty %}
