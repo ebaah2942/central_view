@@ -59,6 +59,7 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -137,8 +138,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -158,13 +157,6 @@ AUTHENTICATION_BACKENDS = [
 MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-STATICFILES_STORAGE='whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-
-DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-
 
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles") 
@@ -195,24 +187,33 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 EMAIL_DEBUG = True
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {
-        "mail_log": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": "email_debug.log",
+        "console": {
+            "class": "logging.StreamHandler",
         },
     },
+    "root": {
+        "handlers": ["console"],
+        "level": "WARNING",  # Only show WARNING and ERROR by default
+    },
     "loggers": {
-        "django.core.mail": {
-            "handlers": ["mail_log"],
-            "level": "DEBUG",
-            "propagate": True,
+        "django": {
+            "handlers": ["console"],
+            "level": "WARNING",  # Only show Django warnings/errors
+            "propagate": False,
+        },
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",  # Only HTTP 500 and serious errors
+            "propagate": False,
         },
     },
 }
+
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
@@ -239,8 +240,8 @@ credentials = service_account.Credentials.from_service_account_file(
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STATIC_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/static/'
 MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'
 
 

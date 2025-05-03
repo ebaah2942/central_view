@@ -119,6 +119,15 @@
         font-size: 18px;
         border-radius: 5px;
     }
+    .video-section .btn:hover {
+        background: white;
+        color: black !important;
+    }
+
+    .btn:hover {
+        background: white;
+        color: black !important;
+    }
 
     .carousel-image {
         height: 500px; /* Adjust height as needed */
@@ -144,6 +153,63 @@
     font-size: 1.25rem;
   }
 }
+
+.our-rooms-section {
+  background: linear-gradient(to right, #f8f9fa, #e0e0e0); /* Soft gradient */
+  border-radius: 15px;
+  padding: 60px 20px;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.section-description {
+  font-size: 1.2rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.custom-button {
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  border-radius: 30px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.custom-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-3px);
+  color: black !important;
+}
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  opacity: 0;
+  animation: fadeUp 1s ease forwards;
+}
+
+.delay-1 {
+  animation-delay: 0.5s;
+}
+
+.delay-2 {
+  animation-delay: 1s;
+}
+
 </style>
 
 <div class="container">
@@ -159,7 +225,7 @@
         {% elif user_role|lower in "manager receptionist" %}
             <div style="background-color: aliceblue; padding: 20px; border-radius: 10px;">
                 <h2>Welcome, {{ user.username }}!</h2>
-                <a href="{% url 'reception_dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
+                <a href="{% url 'reception_dashboard' %}"  class="btn btn-primary">Go to Dashboard</a>
             </div>
         {% endif %}
     {% endif %}
@@ -172,8 +238,8 @@
     <hr>
     <section class="room-preview py-5 our-rooms-section">
         <div class="container text-center">
-          <h2 class="mb-4">Our Rooms</h2>
-          <p class="text-muted mb-4">Choose from our luxury, double, and single rooms designed for comfort.</p>
+          <h2 class="section-title mb-3">Our Rooms</h2>
+          <p class="section-description mb-4">Choose from our luxury, double, and single rooms designed for comfort.</p>
           <div class="row">
             {% for room in rooms|slice:":3" %}
               <div class="col-md-4">
@@ -196,7 +262,7 @@
               </div>
             {% endfor %}
           </div>
-          <a href="{% url 'rooms' %}" class="btn btn-primary mt-3">View All Rooms</a>
+          <a href="{% url 'rooms' %}" class="btn btn-primary btn-lg custom-button">View All Rooms</a>
         </div>
       </section>
       <hr>
@@ -234,6 +300,7 @@
         </button>
       </div>
       <hr>
+        
         <div class="solace2">
             <div style="width: 50%; text-align: center;" class="block">
                 <img src="https://storage.googleapis.com/acvh_bucket/acvh_latest/outside2.JPG" alt="Outside">

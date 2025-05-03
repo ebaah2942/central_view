@@ -19,17 +19,22 @@ class CustomUserAdmin(UserAdmin):
         }),
     )
 
+from django.utils.html import format_html
+from django.contrib import admin
+from .models import Booking
+
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
-    list_display = ('user', 'room', 'check_in', 'check_out', 'is_paid', 'amount_paid')
-    list_filter = ('is_paid',)
-    search_fields = ('user__username', 'room__name')
-    fields = ('user', 'room', 'check_in', 'check_out', 'is_paid', 'amount_paid')
+    list_display = ('user', 'room', 'check_in', 'check_out', 'room_image')
 
-# class BookingAdmin(admin.ModelAdmin):
-#     list_display = ('user', 'room', 'check_in', 'check_out')
-#     search_fields = ('user__username', 'room__name')
-#     list_filter = ['check_in']    
+    def room_image(self, obj):
+        if obj.room and obj.room.image:
+            return format_html('<img src="{}" style="height:50px;">', obj.room.image.url)
+        return "No Image"
+    room_image.short_description = "Room Image"
+
+
+   
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Room)

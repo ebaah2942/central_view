@@ -327,7 +327,6 @@ def book_room(request, room_id):
             quantity = form.cleaned_data.get('quantity')
 
             # Total booked so far for this category
-            # total_booked = Booking.objects.filter(category=category).count()
             total_booked = Booking.objects.filter(category=category).aggregate(total=Sum('quantity'))['total'] or 0
             available_rooms = category.total_rooms - total_booked
 
