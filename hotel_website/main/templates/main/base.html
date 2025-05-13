@@ -341,22 +341,27 @@ a:hover:not(.navbar-brand) {
         }
 });
 
-
     document.addEventListener("DOMContentLoaded", function () {
-        if (!localStorage.getItem("cookiesAccepted")) {
-            Swal.fire({
-                title: "Cookies & Privacy",
-                text: "We use cookies to ensure you get the best experience on our website.",
-                icon: "info",
-                confirmButtonText: "Accept",
-                footer: '<a href="{% url "privacy_policy" %}">Learn more</a>'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    localStorage.setItem("cookiesAccepted", true);
-                }
-            });
-        }
-    });
+    if (!localStorage.getItem("cookiesAccepted")) {
+        Swal.fire({
+            title: "Cookies & Privacy",
+            text: "We use cookies to ensure you get the best experience on our website.",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonText: "Accept",
+            cancelButtonText: "Learn More"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                localStorage.setItem("cookiesAccepted", true);
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                // Redirect to privacy policy page
+                window.location.href = "{% url 'privacy_policy' %}";
+            }
+        });
+    }
+});
+    
+
 
     function updateUnreadCount() {
         fetch("{% url 'notifications_list' %}")  // Ensure this URL returns JSON data

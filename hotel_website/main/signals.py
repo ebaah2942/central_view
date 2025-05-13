@@ -15,6 +15,8 @@ import uuid
 from .views import email_receipt
 from django.db.models.signals import post_delete
 from django.utils.timezone import now
+from django.core.mail import EmailMultiAlternatives
+
 
 
 # Utility function to send emails
@@ -53,8 +55,26 @@ def send_welcome_email(sender, instance, created, **kwargs):
 def send_booking_confirmation(sender, instance, created, **kwargs):
     if created:
         subject = "Your Booking is Confirmed!"
-        message = f"Dear {instance.user.username},\n\nYour booking for {instance.room} is confirmed.\n\nCheck-in: {instance.check_in}\nCheck-out: {instance.check_out}\n\n Kindly call to confirm availability and make payment: +233 59 433 2382/+233 30 223 1759\nkindly note payment validate your booking.\nThank you for choosing us!"
-        send_notification_email(subject, message, instance.user.email)
+        to_email = instance.user.email
+        from_email = "acvh@accracentralviewhotels.com"
+
+        context = {
+            'user': instance.user,
+            'booking': instance,
+        }
+
+        html_content = render_to_string("main/booking_confirmation.html", context)
+        text_content = strip_tags(html_content)
+
+        email = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
+        email.attach_alternative(html_content, "text/html")
+        email.send()
+# @receiver(post_save, sender=Booking)
+# def send_booking_confirmation(sender, instance, created, **kwargs):
+#     if created:
+#         subject = "Your Booking is Confirmed!"
+#         message = f"Dear {instance.user.username},\n\nYour booking for {instance.room} is confirmed.\n\nCheck-in: {instance.check_in}\nCheck-out: {instance.check_out}\n\n Kindly call to confirm availability and make payment: +233 59 433 2382/+233 30 223 1759\nkindly note payment validate your booking.\nThank you for choosing us!"
+#         send_notification_email(subject, message, instance.user.email)
 
 # 3️⃣ Notify Users When Admin Responds to an Inquiry
 @receiver(post_save, sender=Inquiry)

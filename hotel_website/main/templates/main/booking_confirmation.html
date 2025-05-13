@@ -1,0 +1,38 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Confirmation</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+    <div style="max-width: 600px; background: #ffffff; padding: 30px; margin: auto; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <div style="text-align: center;">
+            <img src="https://storage.googleapis.com/acvh_bucket/acvh_latest/brand1.jpg" alt="Hotel Logo" style="width: 120px; margin-bottom: 20px;">
+            <h2 style="color: #333;">Booking Confirmed!</h2>
+        </div>
+
+        <p>Dear {{ user.first_name }},</p>
+        <p>Your booking has been successfully confirmed.</p>
+
+        <h3 style="color: #555;">Booking Details:</h3>
+        <ul style="line-height: 1.6;">
+            <li><strong>Room:</strong> {{ booking.room.name }}</li>
+            <li><strong>Check-in:</strong> {{ booking.check_in }}</li>
+            <li><strong>Check-out:</strong> {{ booking.check_out }}</li>
+        </ul>
+
+        <p><strong>📞 Kindly call to confirm availability and make payment:</strong><br>
+        +233 59 433 2382 / +233 30 223 1759</p>
+
+        <p style="color: #a00;"><strong>Note:</strong> Payment validates your booking.</p>
+
+        <p>Thank you for choosing us!</p>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="www.accracentralviewhotels.com" style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Visit Website</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -57,6 +57,7 @@ def home(request):
     return render(request, 'main/home.html', {'user_role': user_role , 'room': room, 'top_reviews': top_reviews, 'rooms': rooms})
 
 def privacy_policy(request):
+    
     return render(request, 'main/privacy.html')
 
 
