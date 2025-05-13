@@ -5,28 +5,32 @@
 {% block title %}Book Room{% endblock %}
 
 {% block content %}
-
-
- <div  class="container mt-3">
+<div  class="container py-5">
   <h1 style="text-align: center; font-weight: bold; font-family: 'Montserrat', serif;" class="text-center mb-4">Book Room</h1>
   
   
-  <div style="display: flex; justify-content: center; padding: 50px; background-color: #f2f2f2; align-items: center; margin-bottom: 20px; font-family: 'Montserrat', serif; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" class="row justify-content-center">
+  <div class="card shadow-lg p-4" style="max-width: 600px; margin: auto; align-items: center;">
       <div class="col-md-6">
+        <div class="animate__animated animate__fadeIn">
           <form action="{% url 'book_room' room_id=room.id %}" method="POST">
               {% csrf_token %}
-              <h2>Selected Room: {{ room.name }}</h2>
+              <h2 style=" text-align: center; font-weight: bold; font-family: 'Montserrat', serif;">Selected Room: {{ room.name }}</h2>
               <!-- Render the form fields with Bootstrap styling -->
               <div class="form-group mb-3">
                   {{ form.as_p }}
               </div>
 
               <!-- Submit Button -->
-              <button class="btn btn-primary w-100" type="submit">Book Now</button>
+              <button id="bookBtn" class="btn btn-primary w-100 btn-animate" type="submit">
+                <span id="btnText">Book Now</span>
+                <span id="btnSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+              </button>
           </form>
+        </div>
       </div>
   </div>
 </div>
+
 
 
 <script>
@@ -67,6 +71,19 @@
           input.addEventListener("input", validateRooms);
       });
   });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form");
+    const btn = document.getElementById("bookBtn");
+    const btnText = document.getElementById("btnText");
+    const btnSpinner = document.getElementById("btnSpinner");
+
+    form.addEventListener("submit", function () {
+      btn.disabled = true;
+      btnText.textContent = "Processing...";
+      btnSpinner.classList.remove("d-none");
+    });
+  });
   </script>
   
 
@@ -99,6 +116,50 @@
         transform: scale(1.05);
       }
     }
+ .book-now-btn {
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.book-now-btn:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.book-now-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+}
+
+.book-now-btn:hover::after {
+  left: 100%;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+    transition: all 0.3s ease-in-out;
+  }
+
+  .btn-animate {
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 14px rgba(0, 123, 255, 0.4);
+  }
+
+  .btn-animate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
+    background-color: #0056b3 !important;
+    color: #fff !important;
+  }
   </style>
 
 {% endblock %}

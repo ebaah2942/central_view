@@ -53,7 +53,7 @@ def send_welcome_email(sender, instance, created, **kwargs):
 def send_booking_confirmation(sender, instance, created, **kwargs):
     if created:
         subject = "Your Booking is Confirmed!"
-        message = f"Dear {instance.user.username},\n\nYour booking for {instance.room} is confirmed.\n\nCheck-in: {instance.check_in}\nCheck-out: {instance.check_out}\n\n Kindly call to confirm availability and make payment: +233 59 433 2382/+233 30 223 1759\nThank you for choosing us!"
+        message = f"Dear {instance.user.username},\n\nYour booking for {instance.room} is confirmed.\n\nCheck-in: {instance.check_in}\nCheck-out: {instance.check_out}\n\n Kindly call to confirm availability and make payment: +233 59 433 2382/+233 30 223 1759\nkindly note payment validate your booking.\nThank you for choosing us!"
         send_notification_email(subject, message, instance.user.email)
 
 # 3️⃣ Notify Users When Admin Responds to an Inquiry

@@ -319,6 +319,7 @@ def inquiry_list(request):
 @login_required
 def book_room(request, room_id):
     room = Room.objects.get(id=room_id)
+    quantity_range = range(1, room.types.available_rooms + 1)
     category = room.types  
 
     if request.method == 'POST':
@@ -350,6 +351,7 @@ def book_room(request, room_id):
     return render(request, 'main/booking.html', {
         'room': room,
         'form': form,
+        'quantity_range': quantity_range,
     })
 
 
