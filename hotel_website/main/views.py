@@ -39,6 +39,7 @@ from django.utils.timezone import now
 from django.db import models
 from django.db.models import Sum
 from django.db.models import Avg
+from datetime import datetime
 
 
 
@@ -282,7 +283,6 @@ def delete_booking(request, booking_id):
             category.save()
             booking.delete()
             messages.success(request, "Booking deleted successfully")
-            print(list(messages.get_messages(request)))
             return redirect('booking_list')
         except Exception as e:
             messages.error(request, f"Error deleting booking: {str(e)}")
@@ -321,7 +321,7 @@ def inquiry_list(request):
 def book_room(request, room_id):
     room = Room.objects.get(id=room_id)
     quantity_range = range(1, room.types.available_rooms + 1)
-    category = room.types  
+    category = room.types 
 
     if request.method == 'POST':
         form = BookingForm(request.POST)
@@ -334,6 +334,8 @@ def book_room(request, room_id):
 
             if quantity <= 0:
                 messages.error(request, "Quantity must be greater than 0.")
+           
+
             elif quantity > available_rooms:
                 messages.error(request, f"Only {available_rooms} rooms available for {category.category}.")
             else:
@@ -353,6 +355,7 @@ def book_room(request, room_id):
         'room': room,
         'form': form,
         'quantity_range': quantity_range,
+        'today': now().date().isoformat(),
     })
 
 
