@@ -159,7 +159,6 @@ MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles") 
 
 
 CHANNEL_LAYERS = {
@@ -241,6 +240,8 @@ DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'
 

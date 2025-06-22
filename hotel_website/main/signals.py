@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
-from .models import CustomUser
+from .models import CustomUser, LoginRecord
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
@@ -16,6 +16,8 @@ from .views import email_receipt
 from django.db.models.signals import post_delete
 from django.utils.timezone import now
 from django.core.mail import EmailMultiAlternatives
+from django.contrib.auth.signals import user_logged_in
+from django.core.mail import EmailMessage
 
 
 
@@ -29,7 +31,7 @@ def send_notification_email(subject, message, recipient_email, request=None):
         if request:
             domain = get_current_site(request).domain
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            unsubscribe_link = f"http://{domain}/unsubscribe/{uid}/"
+            unsubscribe_link = f"https://{domain}/unsubscribe/{uid}/"
 
         # Build full message with optional unsubscribe link
         full_message = f"{message}\n\nIf you no longer want to receive these emails, you can unsubscribe here: {unsubscribe_link}" if unsubscribe_link else message
@@ -41,6 +43,37 @@ def send_notification_email(subject, message, recipient_email, request=None):
             [recipient_email],
             fail_silently=False,
         )
+#
+@receiver(user_logged_in) 
+def handle_login(sender, request, user, **kwargs):
+    session_key = request.session.session_key
+    user_agent = request.META.get('HTTP_USER_AGENT', '')
+    ip = get_client_ip(request)     
+    
+    existing =LoginRecord.objects.filter(user=user, session_key=session_key).first()
+    if not existing:
+        context = {
+            'user': user,
+            'session_key': session_key,
+            'ip_address': ip,
+            'user_agent': user_agent,
+        }
+        html_message = render_to_string("main/login_record.html", context)
+        email = EmailMessage(
+            subject="Login Record",
+            body=html_message,
+            from_email="acvh@accracentralviewhotels.com",
+            to=[user.email],
+        )
+        email.content_subtype = "html"
+        email.send(fail_silently=False)
+        LoginRecord.objects.create(user=user, session_key=session_key, ip_address=ip, user_agent=user_agent)
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    return request.META.get('REMOTE_ADDR')            
 
 # 1️⃣ Send Welcome Email After User Registers
 @receiver(post_save, sender=User)
@@ -87,7 +120,7 @@ ADMIN_EMAIL = "acvh@accracentralviewhotels.com"
 def notify_admin_new_booking(sender, instance, created, **kwargs):
     if created:
         subject = "New Booking Received"
-        message = f"A new booking has been made by {instance.user.username}.\n\nRoom: {instance.room}\nQuantity: {instance.quantity}\nRoom Type: {instance.room.types.category}\nCheck-in: {instance.check_in}\nCheck-out: {instance.check_out}\n\nPlease review it in the admin panel."
+        message = f"A new booking has been made by {instance.user.first_name}.\n\nRoom: {instance.room}\n Contact: {instance.phone_number}\nQuantity: {instance.quantity}\nRoom Type: {instance.room.types.category}\nCheck-in: {instance.check_in}\nCheck-out: {instance.check_out}\n\nPlease review it in the admin panel."
         send_notification_email(subject, message, ADMIN_EMAIL)
 
 # 2️⃣ Notify Admin When a New Inquiry is Submitted
@@ -115,7 +148,7 @@ def send_email_notification(sender, instance, created, **kwargs):
         except:
             domain = 'accracentralviewhotels.com'  # fallback domain
        
-        manage_link = f"http://{domain}/preferences/email/"
+        manage_link = f"https://{domain}/preferences/email/"
 
         # unsubscribe_link = f"http://{domain}/unsubscribe/{uid}/"
 

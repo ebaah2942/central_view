@@ -12,11 +12,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link rel="icon" type="image/x-icon" href="https://myacvhbucket.s3.eu-north-1.amazonaws.com/favicon.ico">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
   <!-- CDN Example -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-KBJT14H8PB"></script>
@@ -258,10 +258,10 @@ a:hover:not(.navbar-brand) {
               </a>
               </li>
               <li class="nav-item"><a class="nav-link" href="{% url 'booking_list' %}">My Bookings</a></li>
-              <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">Profile</a></li>
+              <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}"><i class="fa-regular fa-user"></i> Profile</a></li>
               <li class="nav-item">
                 <a class="nav-link" style="position: relative;" href="{% url 'notifications_list' %}">
-                  Notifications 
+                   <i class="fa-regular fa-bell"></i>
                   {% if unread_count > 0 %}
                       <span class="badge bg-danger">{{ unread_count }}</span>
                   {% endif %}
@@ -349,11 +349,13 @@ a:hover:not(.navbar-brand) {
             icon: "info",
             showCancelButton: true,
             confirmButtonText: "Accept",
-            cancelButtonText: "Learn More"
+            cancelButtonText: "Reject",
+            footer: '<a href="{% url "privacy_policy" %}" style="color:#3085d6">Learn more</a>'
         }).then((result) => {
             if (result.isConfirmed) {
                 localStorage.setItem("cookiesAccepted", true);
             } else if (result.dismiss === Swal.DismissReason.cancel) {
+                localStorage.setItem("cookiesAccepted", false);
                 // Redirect to privacy policy page
                 window.location.href = "{% url 'privacy_policy' %}";
             }

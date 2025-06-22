@@ -21,6 +21,17 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+    
+
+class LoginRecord(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)  
+    session_key = models.CharField(max_length=100)
+    ip_address = models.CharField(max_length=50)
+    user_agent = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.timestamp}"  
 
 class RoomCategory(models.Model):
     CATEGORY_CHOICES = [
