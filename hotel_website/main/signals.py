@@ -18,6 +18,7 @@ from django.utils.timezone import now
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.signals import user_logged_in
 from django.core.mail import EmailMessage
+from django.utils import timezone
 
 
 
@@ -43,9 +44,18 @@ def send_notification_email(subject, message, recipient_email, request=None):
             [recipient_email],
             fail_silently=False,
         )
-#
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
 @receiver(user_logged_in) 
 def handle_login(sender, request, user, **kwargs):
+    login_time = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
     session_key = request.session.session_key
     user_agent = request.META.get('HTTP_USER_AGENT', '')
     ip = get_client_ip(request)     
@@ -57,6 +67,7 @@ def handle_login(sender, request, user, **kwargs):
             'session_key': session_key,
             'ip_address': ip,
             'user_agent': user_agent,
+            'login_time': login_time,
         }
         html_message = render_to_string("main/login_record.html", context)
         email = EmailMessage(
@@ -67,13 +78,11 @@ def handle_login(sender, request, user, **kwargs):
         )
         email.content_subtype = "html"
         email.send(fail_silently=False)
-        LoginRecord.objects.create(user=user, session_key=session_key, ip_address=ip, user_agent=user_agent)
+        LoginRecord.objects.create(user=user, session_key=session_key, ip_address=ip, user_agent=user_agent, timestamp=login_time)
 
-def get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    return request.META.get('REMOTE_ADDR')            
+
+
+
 
 # 1️⃣ Send Welcome Email After User Registers
 @receiver(post_save, sender=User)
@@ -120,7 +129,7 @@ ADMIN_EMAIL = "acvh@accracentralviewhotels.com"
 def notify_admin_new_booking(sender, instance, created, **kwargs):
     if created:
         subject = "New Booking Received"
-        message = f"A new booking has been made by {instance.user.first_name}.\n\nRoom: {instance.room}\n Contact: {instance.phone_number}\nQuantity: {instance.quantity}\nRoom Type: {instance.room.types.category}\nCheck-in: {instance.check_in}\nCheck-out: {instance.check_out}\n\nPlease review it in the admin panel."
+        message = f"A new booking has been made by {instance.user.first_name}.\n\nRoom: {instance.room}\n Contact: {instance.user.phone_number}\nQuantity: {instance.quantity}\nRoom Type: {instance.room.types.category}\nCheck-in: {instance.check_in}\nCheck-out: {instance.check_out}\n\nPlease review it in the admin panel."
         send_notification_email(subject, message, ADMIN_EMAIL)
 
 # 2️⃣ Notify Admin When a New Inquiry is Submitted

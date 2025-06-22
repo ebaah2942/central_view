@@ -46,7 +46,7 @@
 
         <div class="col-md-4 text-md-end d-flex flex-column justify-content-between">
           <div class="d-flex flex-column flex-md-row justify-content-md-end align-items-md-center gap-2 mb-3">
-            <a href="{% url 'update_booking' booking.id %}" class="btn btn-outline-primary">Update</a>
+            <a href="{% url 'update_booking' booking.id %}" class="btn btn-outline-primary"><i class="fa-regular fa-pen-to-square"></i> Update</a>
 
             {% if not booking.is_checked_out %}
               <a href="{% url 'checkout_booking' booking.id %}" class="btn btn-success">Checkout</a>
@@ -56,7 +56,7 @@
 
             <form action="{% url 'delete_booking' booking.id %}" method="post" onsubmit="return confirmDelete()">
               {% csrf_token %}
-              <button type="submit" class="btn btn-outline-danger w-100" onclick="confirmDelete(event, '{{ booking.id }}')">Delete</button>
+              <button type="submit" class="btn btn-outline-danger w-100" onclick="confirmDelete(event, '{{ booking.id }}')"><i class="fa-regular fa-trash"></i> Delete</button>
             </form>
           </div>
 

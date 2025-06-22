@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -36,14 +38,15 @@
       <p>A new login to your account was detected:</p>
 
       <ul>
-        <li><strong>IP Address:</strong> {{ ip }}</li>
+        <li><strong>IP Address:</strong> {{ ip_address }}</li>
         <li><strong>Device:</strong> {{ user_agent }}</li>
-        <li><strong>Time:</strong> {{ timestamp }}</li>
+        <li><strong>Time:</strong> {{ login_time }}</li>
       </ul>
 
-      <p>If this was you, no action is needed. If you don’t recognize this activity, please <a href="#">reset your password</a> immediately.</p>
+      <p>If this was you, no action is needed. If you don’t recognize this activity, please <a href="{% url 'password_reset' %}">reset your password</a> immediately.</p>
 
       <p class="footer">Thanks,<br>ACV Hotel</p>
     </div>
   </body>
 </html>
+
