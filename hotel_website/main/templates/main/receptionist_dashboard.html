@@ -142,6 +142,11 @@ th, td {
     text-align: left;
 }
 
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+
 th {
     background: #4a148c;
     color: white;
@@ -229,7 +234,7 @@ a:hover {
                     </tr>
                 </thead>
                 <tbody>
-                    {% for booking in bookings %}
+                    {% for booking in page_obj %}
                     <tr>
                         <td>{{ booking.user.username }}</td>
                         <td>{{ booking.user.phone_number }}</td>
@@ -258,7 +263,26 @@ a:hover {
                 </tbody>
             </table>
         </div>
+        <div class="pagination justify-content-center mt-4">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a class="btn btn-outline-primary me-2" href="?page=1">&laquo; first</a>
+                    <a class="btn btn-outline-primary me-2" href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="btn btn-light border me-2">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a class="btn btn-outline-primary me-2" href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a class="btn btn-outline-primary" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
         </div>
+
+        </div>
+        <hr>
 
         <!-- Inquiries Section -->
         <div id="inquiries" class="content-section">
@@ -273,19 +297,73 @@ a:hover {
                         <th>Reply</th>
                         <th>Response</th>
                         <th>Action</th>
+                        <th>Date</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for inquiry in inquiries %}
+                    {% for inquiry in page_obj_inquiries %}
                     <tr>
                         <td>{{ inquiry.user.username }}</td>
                         <td>{{ inquiry.user.email }}</td>
-                        <td>{{ inquiry.message }}</td>
+                         <td>
+                            {% if inquiry.message|length > 60 %}
+                                {{ inquiry.message|truncatechars:60 }}
+                                <br>
+                                <button class="btn btn-sm btn-outline-primary mt-1" data-bs-toggle="modal" data-bs-target="#messageModal{{ inquiry.id }}">
+                                    View Full
+                                </button>
+
+                                <!-- Message Modal -->
+                                <div class="modal fade" id="messageModal{{ inquiry.id }}" tabindex="-1" aria-labelledby="messageLabel{{ inquiry.id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="messageLabel{{ inquiry.id }}">Full Message</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">{{ inquiry.message }}</div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                            {% else %}
+                                {{ inquiry.message }}
+                            {% endif %}
+                        </td>
+
                         <td>{% if inquiry.is_resolved %}✅ Resolved{% else %}❌ Pending{% endif %}</td>
                         <td style="text-align: center;">
                             <a style="border: none; text-decoration: none; color: black;" type="submit" href="{% url 'respond_inquiry' inquiry.id %}">Reply</a>
                         </td>
-                        <td>{{ inquiry.response }}</td>
+                        <td>
+                            {% if inquiry.response|length > 60 %}
+                                {{ inquiry.response|truncatechars:60 }}
+                                <br>
+                                <button class="btn btn-sm btn-outline-secondary mt-1" data-bs-toggle="modal" data-bs-target="#responseModal{{ inquiry.id }}">
+                                    View Full
+                                </button>
+
+                                <!-- Response Modal -->
+                                <div class="modal fade" id="responseModal{{ inquiry.id }}" tabindex="-1" aria-labelledby="responseLabel{{ inquiry.id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="responseLabel{{ inquiry.id }}">Response</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">{{ inquiry.response }}</div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                            {% else %}
+                                {{ inquiry.response }}
+                            {% endif %}
+                        </td>
                         <td style="text-align: center;"> 
                             <form action="{% url 'archive_inquiry' inquiry.id %}" method="POST">
                                 {% csrf_token %}
@@ -294,6 +372,7 @@ a:hover {
                                 </button>
                             </form>
                         </td>
+                        <td>{{ inquiry.created_at }}</td>
                     </tr>
                     {% empty %}
                     <tr>
@@ -302,7 +381,25 @@ a:hover {
                     {% endfor %}
                 </tbody>
             </table>
+            <div class="pagination justify-content-center mt-4">
+            <span class="step-links">
+                {% if page_obj_inquiries.has_previous %}
+                    <a class="btn btn-outline-primary me-2" href="?page=1">&laquo; first</a>
+                    <a class="btn btn-outline-primary me-2" href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="btn btn-light border me-2">
+                    Page {{ page_obj_inquiries.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj_inquiries.has_next %}
+                    <a class="btn btn-outline-primary me-2" href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a class="btn btn-outline-primary" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
         </div>
+        </div>
+        <hr>
        
 
         <!-- Notifications Section -->
@@ -336,10 +433,10 @@ a:hover {
                         </tr>
                     </thead>
                     <tbody>
-                        {% for notification in notifications %}
+                        {% for notification in page_reduce %}
                             {% if not notification.is_archived %}
                         <tr>
-                            <td>{{ notification.message }}</td>
+                            <td>{{ notification.message }} <span style="font-size: 12px; font-style: italic; color: gray;" class="text-muted">({{ notification.created_at }})</span></td>
                             <td>{{ notification.user.username }}</td>
                             {% if request.user.role|lower == "manager" or request.user.role|lower == "receptionist" %}
                                 <td style="text-align: center;">
@@ -375,9 +472,29 @@ a:hover {
                 </table>
                 </div>
             </div>
+             <div class="pagination justify-content-center mt-4">
+            <span class="step-links">
+                {% if page_reduce.has_previous %}
+                    <a class="btn btn-outline-primary me-2" href="?page=1">&laquo; first</a>
+                    <a class="btn btn-outline-primary me-2" href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="btn btn-light border me-2">
+                    Page {{ page_reduce.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_reduce.has_next %}
+                    <a class="btn btn-outline-primary me-2" href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a class="btn btn-outline-primary" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
         </div>
 
+       
+
     </div>
+    <hr>
 
     <script>
         function confirmDelete() {

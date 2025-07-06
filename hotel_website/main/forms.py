@@ -42,39 +42,6 @@ class BookingForm(forms.ModelForm):
         return check_out
 
 
-# class BookingForm(forms.ModelForm):
-#     class Meta:
-#         model = Booking
-#         fields = ('check_in', 'check_out', 'quantity')
-
-#         def clean_check_in(self):
-#             check_in = self.cleaned_data.get('check_in')
-#             if check_in and check_in < timezone.now().date():
-#                 raise forms.ValidationError("Check-in date cannot be in the past.")
-#             return check_in
-        
-#         def clean_check_out(self):
-#             check_out = self.cleaned_data.get('check_out')
-#             if check_out and check_out < timezone.now().date():
-#                 raise forms.ValidationError("Check-out date cannot be in the past.")
-#             return check_out
-
-#     check_in = forms.DateField(
-#         widget=forms.DateInput(
-#             attrs={
-#                 'type': 'date',
-#                 'placeholder': 'YYYY-MM-DD'  # Example placeholder
-#             }
-#         )
-#     )
-#     check_out = forms.DateField(
-#         widget=forms.DateInput(
-#             attrs={
-#                 'type': 'date',
-#                 'placeholder': 'YYYY-MM-DD'  # Example placeholder
-#             }
-#         )
-#     )
 
 
 class CustomUserCreationForm(forms.ModelForm):
@@ -99,10 +66,7 @@ class CustomUserCreationForm(forms.ModelForm):
             user.save()
         return user
 
-# class CustomUserCreationForm(UserCreationForm):
-#     class Meta:
-#         model = CustomUser
-#         fields = ['username', 'phone_number', 'address', 'email', 'first_name', 'last_name', 'password1', 'password2']       
+
 
 
 class CustomLoginForm(AuthenticationForm):

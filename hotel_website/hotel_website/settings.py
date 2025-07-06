@@ -251,3 +251,7 @@ if DEBUG:
 else:
     STATIC_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/static/'
     MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'
+
+
+DEFAULT_DOMAIN = os.getenv("DEFAULT_DOMAIN", "localhost:8000")
+DEFAULT_PROTOCOL = os.getenv("DEFAULT_PROTOCOL", "http")

@@ -402,14 +402,24 @@ def update_booking(request, booking_id):
 # administrative page
 @login_required
 def reception_dashboard(request):
+    
     user_role = request.user.role.lower()
     if user_role not in ['manager', 'receptionist']:
         messages.error(request, "You do not have permission to access this page.")
         return redirect('home') 
     booking = Booking.objects.select_related('user', 'room').all().order_by('-created_at')
+    paginator = Paginator(booking, 10)  # Show 10 bookings per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     inquiries = Inquiry.objects.filter(is_archived=False).order_by('-created_at')
+    paginate = Paginator(inquiries, 10) 
+    page_number = request.GET.get('page')
+    page_obj_inquiries = paginate.get_page(page_number)
     users = CustomUser.objects.all()
     notifications = Notification.objects.all()
+    reduce = Paginator(notifications, 10)
+    page_number = request.GET.get('page')
+    page_reduce = reduce.get_page(page_number)
     if request.method == "POST":
         # Handle sending notifications
         user_id = request.POST.get("user_id")
@@ -421,11 +431,13 @@ def reception_dashboard(request):
             return redirect('reception_dashboard')
         # print("Notifications:", notifications)
     return render(request, 'main/receptionist_dashboard.html', {
-        'user_role': user_role, 
-        'inquiries': inquiries, 
-        'users': users, 
-        'notifications': notifications, 
-        'bookings': booking})
+        'user_role': user_role,  
+        'users': users,          
+        'page_obj': page_obj,
+        'page_obj_inquiries': page_obj_inquiries,
+        'page_reduce': page_reduce
+
+        })
 
 # view to send an inquiry
 @login_required

@@ -107,13 +107,40 @@
                     <th>Status</th>
                     <th>Response</th>
                     <th style="text-align: center;">Action</th>
+                    <th>Date</th>
                 </tr>
             </thead>
             <tbody>
                 {% for inquiry in inquiries %}
                 <tr>
                     <td>{{ inquiry.subject }}</td>
-                    <td>{{ inquiry.message }}</td>
+                    <td>
+                        {% if inquiry.message|length > 60 %}
+                            {{ inquiry.message|truncatechars:60 }}
+                            <br>
+                            <button class="btn btn-sm btn-outline-primary mt-1" data-bs-toggle="modal" data-bs-target="#messageModal{{ inquiry.id }}">
+                                View Full
+                            </button>
+
+                                <!-- Message Modal -->
+                            <div class="modal fade" id="messageModal{{ inquiry.id }}" tabindex="-1" aria-labelledby="messageLabel{{ inquiry.id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="messageLabel{{ inquiry.id }}">Full Message</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">{{ inquiry.message }}</div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                                </div>
+                            </div>
+                                </div>
+                        {% else %}
+                            {{ inquiry.message }}
+                        {% endif %}
+                    </td>
                     <td>
                         {% if inquiry.is_resolved %}
                             <span style="color: green;">Resolved</span>
@@ -136,6 +163,7 @@
                             </button>
                         </form>
                     </td>
+                    <td style="text-align: center; font-size: 12px; font-style: italic; color: gray;">{{ inquiry.created_at }}</td>
                     
                 </tr>
                 {% empty %}

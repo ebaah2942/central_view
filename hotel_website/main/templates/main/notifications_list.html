@@ -110,11 +110,39 @@
                 <th>Message</th>
                 <th>Status</th>
                 <th>Action</th>
+                <th>Date</th>
                 
             </tr>
             {% for notification in notifications %}
             <tr>
-                <td>{{ notification.message }}</td>
+                <!-- <td>{{ notification.message }}</td> -->
+                <td>
+                            {% if notification.message|length > 60 %}
+                                {{ notification.message|truncatechars:60 }}
+                                <br>
+                                <button class="btn btn-sm btn-outline-primary mt-1" data-bs-toggle="modal" data-bs-target="#messageModal{{ inquiry.id }}">
+                                    View Full
+                                </button>
+
+                                <!-- Message Modal -->
+                                <div class="modal fade" id="messageModal{{ inquiry.id }}" tabindex="-1" aria-labelledby="messageLabel{{ inquiry.id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="messageLabel{{ inquiry.id }}">Full Message</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">{{ notification.message }}</div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                            {% else %}
+                                {{ notification.message }}
+                            {% endif %}
+                </td>
                 <td>
                     {% if notification.is_read %}
                         <span class="text-success">Read</span>
@@ -129,6 +157,7 @@
                         <span style="color: #333;">No Action Required</span>
                     {% endif %}
                 </td>
+                <td style=" text-align: center; font-size: 12px; font-style: italic; color: gray;">{{ notification.created_at }}</td>
             </tr>
             {% endfor %}
         </table>

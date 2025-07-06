@@ -19,8 +19,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.signals import user_logged_in
 from django.core.mail import EmailMessage
 from django.utils import timezone
-
-
+from django.conf import settings
+from django.urls import reverse
 
 # Utility function to send emails
 
@@ -62,12 +62,15 @@ def handle_login(sender, request, user, **kwargs):
     
     existing =LoginRecord.objects.filter(user=user, session_key=session_key).first()
     if not existing:
+        reset_link = f"{settings.DEFAULT_PROTOCOL}://{settings.DEFAULT_DOMAIN}{reverse('custom_password_reset_request')}"
+
         context = {
             'user': user,
             'session_key': session_key,
             'ip_address': ip,
             'user_agent': user_agent,
             'login_time': login_time,
+            'reset_link': reset_link
         }
         html_message = render_to_string("main/login_record.html", context)
         email = EmailMessage(
@@ -129,7 +132,7 @@ ADMIN_EMAIL = "acvh@accracentralviewhotels.com"
 def notify_admin_new_booking(sender, instance, created, **kwargs):
     if created:
         subject = "New Booking Received"
-        message = f"A new booking has been made by {instance.user.first_name}.\n\nRoom: {instance.room}\n Contact: {instance.user.phone_number}\nQuantity: {instance.quantity}\nRoom Type: {instance.room.types.category}\nCheck-in: {instance.check_in}\nCheck-out: {instance.check_out}\n\nPlease review it in the admin panel."
+        message = f"A new booking has been made by {instance.user.first_name}.\n\nRoom: {instance.room}\nContact: {instance.user.phone_number}\nQuantity: {instance.quantity}\nRoom Type: {instance.room.types.category}\nCheck-in: {instance.check_in}\nCheck-out: {instance.check_out}\n\nPlease review it in the admin panel."
         send_notification_email(subject, message, ADMIN_EMAIL)
 
 # 2️⃣ Notify Admin When a New Inquiry is Submitted
@@ -156,7 +159,6 @@ def send_email_notification(sender, instance, created, **kwargs):
             domain = get_current_site(None).domain
         except:
             domain = 'accracentralviewhotels.com'  # fallback domain
-       
         manage_link = f"https://{domain}/preferences/email/"
 
         # unsubscribe_link = f"http://{domain}/unsubscribe/{uid}/"
