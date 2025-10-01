@@ -8,19 +8,19 @@
 
 <div class="container py-4">
     <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h3 class="mb-0">Update Profile</h3>
+        <div style="background-color: #e8dddd;" class="card-header text-white">
+            <h3 style="color: #2b2323; font-weight: bold; text-align: center;" class="mb-0">Update Profile</h3>
         </div>
         <div class="card-body">
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit" class="btn btn-success mt-2">Save Changes</button>
+                <button class="btn btn-primary px-4 py-2 rounded-pill shadow-sm d-inline-flex align-items-center gap-2" style="background-color: #2b2323; align-items: center;" type="submit">Save Changes</button>
             </form>
             <hr>
 
             <div class="mt-4">
-                <a href="{% url 'change_password' %}" class="btn btn-warning btn-sm me-2">
+                <a href="{% url 'change_password' %}" class="btn btn-outline-primary btn-sm me-2">
                     Change Password
                 </a>
                 <a href="{% url 'manage_email_preferences' %}" class="btn btn-outline-primary btn-sm">
@@ -36,6 +36,14 @@
                     <span class="text-danger">❌ Unsubscribed</span>
                 {% endif %}
             </p>
+        </div>
+       <div class="text-center mb-3">
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger px-4 py-2 rounded-pill shadow-sm d-inline-flex align-items-center gap-2">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
+            </form>
         </div>
     </div>
 </div>
@@ -55,11 +63,7 @@
       cursor: pointer;
 
     }
-    /* .main-content {
-            margin-left: 270px;
-            padding: 20px;
-            flex-grow: 1;
-        } */
+ 
 
     .content-section {
             background: white;
@@ -81,6 +85,17 @@
       text-decoration: none;
       color: #007bff;
       font-weight: bold;
+    }
+
+   .save-btn {
+        background-color: #2b2323;
+        border: none;
+        transition: all 0.3s ease;
+    }
+    .save-btn:hover {
+        background-color: #1e1a1a; /* slightly darker shade */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.25);
     }
 
 </style>

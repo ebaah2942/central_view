@@ -1,406 +1,561 @@
-{% extends 'main/base.html' %}
-{% load static %}
-
-{% block title %}Home{% endblock %}
-
+{% extends 'main/base.html' %} {% load static %} {% block title %}Home{%endblock%} 
 {% block content %}
 <style>
-    .solace {
-        background-image: url('https://storage.googleapis.com/acvh_bucket/acvh_latest/rece5.jpg');
-        background-size: cover;
-        height: 600px;
-        width: 100%;
-        text-align: center;
-        margin-top: 0;
-        padding: 100px 0;
-        position: relative;
-        border-radius: 10px;
-
-    }
-    .solace h1 {
-        font-weight: bold;
-        color: purple;
-        font-family: 'Courier New', Courier, monospace;
-        
-    }
-    .solace p {
-        font-family: cursive;
-        color: white;
-        font-size: 20px;
-        font-weight: bold;
-        
-    }
-
-.book-now-btn {
-  position: relative;
-  overflow: hidden;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.book-now-btn:hover {
-  background-color: #0056b3;
-  transform: scale(1.05);
-}
-
-.book-now-btn::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.2);
-  transform: skewX(-20deg);
-  transition: left 0.5s ease;
-}
-
-.book-now-btn:hover::after {
-  left: 100%;
-}
-
-  
-
-    .solace2 {
-        display: flex;
-        justify-content: space-between;
-        gap: 20px;
-        
-    }
-
-    .solace2 img {
-        width: 100%;
-        height: auto;
-        border-radius: 10px;
-    }
-
-    .solace2 p {
-        font-family: 'Courier New', Courier, monospace;
-        text-align: left;
-        line-height: 1.8;
-        padding: 1rem;
-        background-color: #f9f9f9;
-    
-    }
-    .container {
-        top: auto;
-        width: 100%;
-        max-width: 100%;
-        padding: 0;
-        margin: 0;
-    }
-
-    .oboy {
-        display: inline-block; 
-        background: linear-gradient(90deg, #1abc9c, #3498db);
-        color: #eeeff4; 
-        padding: 12px 24px;
-        font-size: 16px; 
-        font-weight: bold; 
-        text-decoration: none; border-radius: 5px; 
-        transition: background-color 0.3s ease;
-    }
-
-    .video-section {
-        position: relative;
-        width: 100%;
-        height: 400px; /* Adjust height as needed */
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .video-section video {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .video-section .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.4); /* Dark overlay */
-    }
-
-    .video-section .content {
-        position: relative;
-        text-align: center;
-        color: white;
-        z-index: 2;
-        font-family: 'Courier New', Courier, monospace;
-    }
-
-    .video-section .btn {
-        display: inline-block;
-        margin-top: 15px;
-        padding: 10px 20px;
-        background: #f04e30;
-        color: white;
-        text-decoration: none;
-        font-size: 18px;
-        border-radius: 5px;
-    }
-    .video-section .btn:hover {
-        background: white;
-        color: black !important;
-    }
-
-    .btn:hover {
-        background: white;
-        color: black !important;
-    }
-
-    .carousel-image {
-        height: 500px; /* Adjust height as needed */
-        object-fit: cover;
-      }
-
-    .carousel-caption {
-      background: rgba(0, 0, 0, 0.5); /* semi-transparent dark background */
-      border-radius: 8px;
-      padding: 1rem;
-    }
-
-.carousel-caption h5,
-.carousel-caption p {
-  font-size: 1rem; /* smaller font size for better mobile view */
-}
-
-@media (min-width: 768px) {
-  .carousel-caption h5 {
-    font-size: 2rem; /* bigger on larger screens */
+  .solace {
+    background-image: url("https://storage.googleapis.com/acvh_bucket/acvh_latest/rece5.jpg");
+    background-size: cover;
+    height: 600px;
+    width: 100%;
+    text-align: center;
+    margin-top: 0;
+    padding: 100px 0;
+    position: relative;
+    border-radius: 10px;
   }
+  .solace h1 {
+    font-weight: bold;
+    color: purple;
+    font-family: "Courier New", Courier, monospace;
+  }
+  .solace p {
+    font-family: cursive;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .book-now-btn {
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  .book-now-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+
+  .book-now-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: skewX(-20deg);
+    transition: left 0.5s ease;
+  }
+
+  .book-now-btn:hover::after {
+    left: 100%;
+  }
+
+  .solace2 {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .solace2 img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+
+  .solace2 p {
+    font-family: "Courier New", Courier, monospace;
+    text-align: left;
+    line-height: 1.8;
+    padding: 1rem;
+    background-color: #f9f9f9;
+  }
+  .container {
+    top: auto;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .oboy {
+    display: inline-block;
+    background: linear-gradient(90deg, #1abc9c, #3498db);
+    color: #eeeff4;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+
+  .video-section {
+    position: relative;
+    width: 100%;
+    height: 400px; /* Adjust height as needed */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .video-section video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .video-section .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Dark overlay */
+  }
+
+  .video-section .content {
+    position: relative;
+    text-align: center;
+    color: white;
+    z-index: 2;
+    font-family: "Courier New", Courier, monospace;
+  }
+
+  .video-section .btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #f04e30;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    border-radius: 5px;
+  }
+  .video-section .btn:hover {
+    background: white;
+    color: black !important;
+  }
+
+  .btn:hover {
+    background: white;
+    color: black !important;
+  }
+
+  .carousel-image {
+    height: 500px; /* Adjust height as needed */
+    object-fit: cover;
+  }
+
+  .carousel-caption {
+    background: rgba(0, 0, 0, 0.5); /* semi-transparent dark background */
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .carousel-caption h5,
   .carousel-caption p {
-    font-size: 1.25rem;
+    font-size: 1rem; /* smaller font size for better mobile view */
   }
-}
 
-.our-rooms-section {
-  background: linear-gradient(to right, #f8f9fa, #e0e0e0); /* Soft gradient */
-  border-radius: 15px;
-  padding: 60px 20px;
-}
+  @media (min-width: 768px) {
+    .carousel-caption h5 {
+      font-size: 2rem; /* bigger on larger screens */
+    }
+    .carousel-caption p {
+      font-size: 1.25rem;
+    }
+  }
 
-.section-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #333;
-}
+  .our-rooms-section {
+    background: linear-gradient(to right, #f8f9fa, #e0e0e0); /* Soft gradient */
+    border-radius: 15px;
+    padding: 60px 20px;
+  }
 
-.section-description {
-  font-size: 1.2rem;
-  color: #666;
-  max-width: 600px;
-  margin: 0 auto;
-}
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+  }
 
-.custom-button {
-  padding: 15px 30px;
-  font-size: 1.1rem;
-  border-radius: 30px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
+  .section-description {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+  }
 
-.custom-button:hover {
-  background-color: #0056b3;
-  transform: translateY(-3px);
-  color: black !important;
-}
+  .custom-button {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
 
-@keyframes fadeUp {
-  0% {
+  .custom-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px);
+    color: black !important;
+  }
+
+  @keyframes fadeUp {
+    0% {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in-up {
     opacity: 0;
-    transform: translateY(40px);
+    animation: fadeUp 1s ease forwards;
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
+
+  .delay-1 {
+    animation-delay: 0.5s;
   }
-}
 
-.fade-in-up {
-  opacity: 0;
-  animation: fadeUp 1s ease forwards;
-}
-
-.delay-1 {
-  animation-delay: 0.5s;
-}
-
-.delay-2 {
-  animation-delay: 1s;
-}
-
+  .delay-2 {
+    animation-delay: 1s;
+  }
 </style>
 
 <div class="container">
-   
-    {% if user.is_authenticated %}
-        {% if user_role|lower == "guest" %}
-            <div style="background-color: aliceblue; padding: 20px; border-radius: 10px;">
-                <h1>Welcome, {{ user.username }}!</h1>
-                {% if room %}
-                    <a href="{% url 'rooms' %}" class="btn btn-primary">Book Now</a> <span><a class="btn btn-primary" href="{% url 'send_inquiry' %}">Send Inquiry</a></span>
-                {% endif %}
-            </div>
-        {% elif user_role|lower in "manager receptionist" %}
-            <div style="background-color: aliceblue; padding: 20px; border-radius: 10px;">
-                <h2>Welcome, {{ user.username }}!</h2>
-                <a href="{% url 'reception_dashboard' %}"  class="btn btn-primary">Go to Dashboard</a>
-            </div>
-        {% endif %}
+  {% if user.is_authenticated %} {% if user_role|lower == "guest" %}
+  <div style="background-color: aliceblue; padding: 20px; border-radius: 10px">
+    <h1>Welcome, {{ user.username }}!</h1>
+    {% if room %}
+    <a href="{% url 'rooms' %}" class="btn btn-primary">Book Now</a>
+    <span
+      ><a class="btn btn-primary" href="{% url 'send_inquiry' %}"
+        >Send Inquiry</a
+      ></span
+    >
     {% endif %}
+  </div>
+  {% elif user_role|lower in "manager receptionist" %}
+  <div style="background-color: aliceblue; padding: 20px; border-radius: 10px">
+    <h2>Welcome, {{ user.username }}!</h2>
+    <a href="{% url 'reception_dashboard' %}" class="btn btn-primary"
+      >Go to Dashboard</a
+    >
+  </div>
+  {% endif %} {% endif %}
 
-        <hr>
-        <div class="solace">
-            <h1> Welcome to Accra Central View Hotel!</h1>
-            <p>Experience Luxury at its best.</p>
-        </div>
-    <hr>
-    <section class="room-preview py-5 our-rooms-section">
-        <div class="container text-center">
-          <h2 class="section-title mb-3">Our Rooms</h2>
-          <p class="section-description mb-4">Choose from our luxury, double, and single rooms designed for comfort.</p>
-          <div class="row">
-            {% for room in rooms|slice:":3" %}
-              <div class="col-md-4">
-                <div class="card shadow-sm mb-4">
-                  {% if room.image %}
-                    <img src="{{ room.image.url }}" class="card-img-top" alt="{{ room.name }}">
-                  {% elif room.types.category == 'King-size Room' %}
-                    <img src="https://storage.googleapis.com/acvh_bucket/acvh_latest/king12.jpg" class="card-img-top" alt="King-Size Room">
-                  {% elif room.name == 'Double-Room' %}
-                    <img src="https://storage.googleapis.com/acvh_bucket/acvh_latest/doub3.jpg" class="card-img-top" alt="Double Room">
-                  {% elif room.name == 'Single-Room' %}
-                    <img src="https://storage.googleapis.com/acvh_bucket/acvh_latest/sing1.jpg" class="card-img-top" alt="Single Room">
-                  {% endif %}
-                  <div class="card-body">
-                    <h5 class="card-title">{{ room.name }}</h5>
-                    <p class="card-text">GHS {{ room.price }}</p>
-                          {% if user.is_authenticated %}
-                              <a href="{% url 'rooms' %}" class="btn btn-primary mt-auto">Book Now</a>
-                          {% else %}
-                              <a href="{% url 'login' %}" class="btn btn-secondary mt-auto">Login to Book</a>
-                          {% endif %}
-                  </div>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-          <a href="{% url 'rooms' %}" class="btn btn-dark btn-lg custom-button">View All Rooms</a>
-        </div>
-      </section>
-      <hr>
-    <div id="roomCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img src="https://storage.googleapis.com/acvh_bucket/acvh_latest/kwame-nkrumah-mausoleum.jpg" class="d-block w-100 img-fluid carousel-image"  alt="museum"> 
-            <div class="carousel-caption d-md-block">
-                <h5>Kwame Nkrumah Mausoleum</h5>
-                <p>Only a 20-minute drive away — explore the legacy of Ghana’s founding father.</p>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <img src="https://storage.googleapis.com/acvh_bucket/acvh_latest/res3.jpg" class="d-block w-100 img-fluid carousel-image" alt="restaurant">
-            <div class="carousel-caption d-md-block">
-                <h5>Restaurant</h5>
-                <p>Savor the taste of tradition and global flavors — where every meal feels like home.</p>            
-              </div>
-          </div>
-          <div class="carousel-item">
-            <img src="https://storage.googleapis.com/acvh_bucket/acvh_latest/king13.jpg"  class="d-block w-100 img-fluid carousel-image" alt="King-Size Room Alternate">
-            <div class="carousel-caption d-md-block">
-                <h5>Bringing the whole family? Choose our spacious Kingsize Room</h5>
-                <p>Experience unmatched comfort and serenity — your perfect family escape.</p>
+  <hr />
+  <div class="solace">
+    <h1>Welcome to Accra Central View Hotel!</h1>
+    <p>Experience Luxury at its best.</p>
+  </div>
+  <hr />
+  <section class="room-preview py-5 our-rooms-section">
+    <div class="container text-center">
+      <h2 class="section-title mb-3">Our Rooms</h2>
+      <p class="section-description mb-4">
+        Choose from our luxury, double, and single rooms designed for comfort.
+      </p>
+      <div class="row">
+        {% for room in rooms|slice:":3" %}
+        <div class="col-md-4">
+          <div class="card shadow-sm mb-4">
+            {% if room.image %}
+            <img
+              src="{{ room.image.url }}"
+              class="card-img-top"
+              alt="{{ room.name }}"
+            />
+            {% elif room.types.category == 'King-size Room' %}
+            <img
+              src="https://storage.googleapis.com/acvh_bucket/acvh_latest/king12.jpg"
+              class="card-img-top"
+              alt="King-Size Room"
+            />
+            {% elif room.name == 'Double-Room' %}
+            <img
+              src="https://storage.googleapis.com/acvh_bucket/acvh_latest/doub3.jpg"
+              class="card-img-top"
+              alt="Double Room"
+            />
+            {% elif room.name == 'Single-Room' %}
+            <img
+              src="https://storage.googleapis.com/acvh_bucket/acvh_latest/sing1.jpg"
+              class="card-img-top"
+              alt="Single Room"
+            />
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ room.name }}</h5>
+              <p class="card-text">GHS {{ room.price }}</p>
+              {% if user.is_authenticated %}
+              <a href="{% url 'rooms' %}" class="btn btn-primary mt-auto"
+                >Book Now</a
+              >
+              {% else %}
+              <a href="{% url 'login' %}" class="btn btn-secondary mt-auto"
+                >Login to Book</a
+              >
+              {% endif %}
             </div>
           </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
+        {% endfor %}
       </div>
-      <hr>
-        
-        <div class="solace2">
-            <div style="width: 50%; text-align: center;" class="block">
-                <img src="https://storage.googleapis.com/acvh_bucket/acvh_latest/outside2.JPG" alt="Outside">
-                <p>
-                    Welcome to our modern hotel, nestled in the heart of the city, spacious rooms, and an array of amenities to cater to your every need.
-                    With a rooftop bar, very fine dining restaurant serving local and international dishes.
-                    Rest assured that our hotel is equipped with a lift, providing easy access to all floors.
-                </p>
-            </div>
-            <div style="width: 50%; text-align: center;" class="block">
-                <img src="https://storage.googleapis.com/acvh_bucket/acvh_latest/ariel.jpg" alt="Ariel view">
-                <p>
-                    Here is an aerial view of the hotel surrounded by nice buildings and a sparkling lights in the evenings.
-                    It showcases modern architecture, stunning views, and a bright, inviting atmosphere.
-                </p>
-            </div>
-        </div>
-    <hr>
-    <div class="video-section">
-        <video autoplay muted loop playsinline>
-            <source src="https://storage.googleapis.com/acvh_bucket/acvh_latest/rooftopbar.mov" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        <div class="overlay"></div>
-        <div class="content">
-            <h1>Welcome to Our RoofTop Bar</h1>
-            <p>Enjoy the cool air from the city of Accra.</p>
-            <a href="{% url 'rooms' %}" class="btn">Book Now</a>
-        </div>
+      <a href="{% url 'rooms' %}" class="btn btn-dark btn-lg custom-button"
+        >View All Rooms</a
+      >
     </div>
-    <hr>
-    <div class="container mt-5">
-        <h3 class="text-center mb-4">What Our Guests Are Saying</h3>
-      
-        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            {% for review in top_reviews %}
-              <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                <div class="d-flex flex-column align-items-center text-center p-4 bg-light rounded shadow">
-                  <img src="https://i.pravatar.cc/100?img={{ forloop.counter }}" class="rounded-circle mb-3" width="80" height="80" alt="User">
-                  <h5>{{ review.user.username }}</h5>
-                  <p class="mb-1"><em>Room: {{ review.room.name }}</em></p>
-                  <p class="mb-2">
-                    {% for i in "12345"|slice:":review.rating"|make_list %}
-                      <i class="bi bi-star-fill text-warning"></i>
-                    {% endfor %}
-                    ({{ review.rating }}/5)
-                  </p>
-                  <blockquote class="blockquote">
-                    <p class="mb-0">"{{ review.comment|truncatewords:30 }}"</p>
-                  </blockquote>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-      
-          <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
-          </button>
+  </section>
+  <hr />
+  <div id="roomCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img
+          src="https://storage.googleapis.com/acvh_bucket/acvh_latest/kwame-nkrumah-mausoleum.jpg"
+          class="d-block w-100 img-fluid carousel-image"
+          alt="museum"
+        />
+        <div class="carousel-caption d-md-block">
+          <h5>Kwame Nkrumah Mausoleum</h5>
+          <p>
+            Only a 20-minute drive away — explore the legacy of Ghana’s founding
+            father.
+          </p>
         </div>
       </div>
-      
+      <div class="carousel-item">
+        <img
+          src="https://storage.googleapis.com/acvh_bucket/acvh_latest/res3.jpg"
+          class="d-block w-100 img-fluid carousel-image"
+          alt="restaurant"
+        />
+        <div class="carousel-caption d-md-block">
+          <h5>Restaurant</h5>
+          <p>
+            Savor the taste of tradition and global flavors — where every meal
+            feels like home.
+          </p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img
+          src="https://storage.googleapis.com/acvh_bucket/acvh_latest/king13.jpg"
+          class="d-block w-100 img-fluid carousel-image"
+          alt="King-Size Room Alternate"
+        />
+        <div class="carousel-caption d-md-block">
+          <h5>Bringing the whole family? Choose our spacious Kingsize Room</h5>
+          <p>
+            Experience unmatched comfort and serenity — your perfect family
+            escape.
+          </p>
+        </div>
+      </div>
+    </div>
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#roomCarousel"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#roomCarousel"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+  <hr />
 
+  <div class="solace2">
+    <div style="width: 50%; text-align: center" class="block">
+      <img
+        src="https://storage.googleapis.com/acvh_bucket/acvh_latest/outside2.JPG"
+        alt="Outside"
+      />
+      <p class="truncate">
+        Welcome to our modern hotel, nestled in the heart of the city, spacious
+        rooms, and an array of amenities to cater to your every need. With a
+        rooftop bar, very fine dining restaurant serving local and international
+        dishes. Rest assured that our hotel is equipped with a lift, providing
+        easy access to all floors.
+      </p>
+      <!-- <span class="read-more" onclick="toggleReadMore('para2', this)"
+        >Read more...</span
+      > -->
+      <!-- <button class="read-more-btn">Read More..</button> -->
+    </div>
+    <div style="width: 50%; text-align: center" class="block">
+      <img
+        src="https://storage.googleapis.com/acvh_bucket/acvh_latest/ariel.jpg"
+        alt="Ariel view"
+      />
+      <p class="truncate">
+        Here is an aerial view of the hotel surrounded by nice buildings and a
+        sparkling lights in the evenings. It showcases modern architecture,
+        stunning views, and a bright, inviting atmosphere.
+      </p>
+      <!-- <span class="read-more" onclick="toggleReadMore('para1', this)"
+        >Read more...</span
+      > -->
+    </div>
+  </div>
+  <hr />
+  <div class="video-section">
+    <video autoplay muted loop playsinline>
+      <source
+        src="https://storage.googleapis.com/acvh_bucket/acvh_latest/rooftopbar.mov"
+        type="video/mp4"
+      />
+      Your browser does not support the video tag.
+    </video>
+    <div class="overlay"></div>
+    <div class="content">
+      <h1>Welcome to Our RoofTop Bar</h1>
+      <p>Enjoy the cool air from the city of Accra.</p>
+      <a href="{% url 'rooms' %}" class="btn">Book Now</a>
+    </div>
+  </div>
+  <hr />
+  <div class="container mt-5">
+    <h3 class="text-center mb-4">What Our Guests Are Saying</h3>
+
+    <div
+      id="testimonialCarousel"
+      class="carousel slide"
+      data-bs-ride="carousel"
+    >
+      <div class="carousel-inner">
+        {% for review in top_reviews %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+          <div
+            class="d-flex flex-column align-items-center text-center p-4 bg-light rounded shadow"
+          >
+            <img
+              src="https://i.pravatar.cc/100?img={{ forloop.counter }}"
+              class="rounded-circle mb-3"
+              width="80"
+              height="80"
+              alt="User"
+            />
+            <h5>{{ review.user.username }}</h5>
+            <p class="mb-1"><em>Room: {{ review.room.name }}</em></p>
+            <p class="mb-2">
+              {% for i in "12345"|slice:":review.rating"|make_list %}
+              <i class="bi bi-star-fill text-warning"></i>
+              {% endfor %} ({{ review.rating }}/5)
+            </p>
+            <blockquote class="blockquote">
+              <p class="mb-0">"{{ review.comment|truncatewords:30 }}"</p>
+            </blockquote>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#testimonialCarousel"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#testimonialCarousel"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+  </div>
 </div>
 
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const wordLimit = 20; // <-- set how many words to show for each paragraph
+    document.querySelectorAll("p.truncate").forEach((p) => {
+      const fullText = p.textContent.trim();
+      const words = fullText.split(/\s+/);
+      if (words.length <= wordLimit) return; // no button if already short
 
+      const firstPart = words.slice(0, wordLimit).join(" ");
+      const restPart = words.slice(wordLimit).join(" ");
+
+      // build HTML: firstPart + ellipsis + hidden rest
+      p.innerHTML = `${firstPart}<span class="ellipsis">… </span><span class="rest" style="display:none"> ${restPart}</span>`;
+
+      // create toggle button (independent per paragraph)
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "read-more";
+      btn.textContent = "Read more";
+      btn.addEventListener("click", () => {
+        const rest = p.querySelector(".rest");
+        const ell = p.querySelector(".ellipsis");
+        const isExpanded = rest.style.display === "inline";
+        if (!isExpanded) {
+          rest.style.display = "inline";
+          ell.style.display = "none";
+          btn.textContent = "Read less";
+        } else {
+          rest.style.display = "none";
+          ell.style.display = "inline";
+          btn.textContent = "Read more";
+        }
+      });
+
+      p.after(btn);
+    });
+  });
+
+  // document.addEventListener("DOMContentLoaded", function () {
+  //   const readMoreBtn = document.querySelector(".read-more-btn");
+  //   const paragraph = readMoreBtn.previousElementSibling;
+  //   const fullText = paragraph.textContent;
+  //   const shortText = fullText.slice(0, 150) + "...";
+  //   let isExpanded = false;
+
+  //   paragraph.textContent = shortText;
+
+  //   readMoreBtn.addEventListener("click", function () {
+  //     if (isExpanded) {
+  //       paragraph.textContent = shortText;
+  //       readMoreBtn.textContent = "Read More..";
+  //     } else {
+  //       paragraph.textContent = fullText;
+  //       readMoreBtn.textContent = "Show Less";
+  //     }
+  //     isExpanded = !isExpanded;
+  //   });
+  // });
+
+  // function toggleReadMore(id, btn) {
+  //   const para = document.getElementById(id);
+  //   if (para.style.webkitLineClamp === "unset") {
+  //     para.style.webkitLineClamp = "2";
+  //     btn.textContent = "Read more...";
+  //   } else {
+  //     para.style.webkitLineClamp = "unset";
+  //     btn.textContent = "Read less";
+  //   }
+  // }
+</script>
 
 {% endblock %}

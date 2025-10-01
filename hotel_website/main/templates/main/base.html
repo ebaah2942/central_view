@@ -53,7 +53,7 @@
     position: fixed;
     top: 0;
     z-index: 1050;
-    background-color: #004080;
+    background-color: #212529;
     width: 100%;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     left: 0;
@@ -258,7 +258,6 @@ a:hover:not(.navbar-brand) {
               </a>
               </li>
               <li class="nav-item"><a class="nav-link" href="{% url 'booking_list' %}">Bookings</a></li>
-              <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}"><i class="fa-regular fa-user"></i> Profile</a></li>
               <li class="nav-item">
                 <a class="nav-link" style="position: relative;" href="{% url 'notifications_list' %}">
                    <i class="fa-regular fa-bell"></i> Nofications
@@ -266,13 +265,14 @@ a:hover:not(.navbar-brand) {
                       <span class="badge bg-danger">{{ unread_count }}</span>
                   {% endif %}
                 </a>
+              <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}"><i class="fa-regular fa-user"></i> Profile</a></li>  
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <form method="post" action="{% url 'logout' %}">
                   {% csrf_token %}
                   <button type="submit" class="btn btn-link nav-link"><i class="fa-regular fa-right-from-bracket"></i> Logout</button>
                 </form>
-              </li>
+              </li> -->
             {% else %}
               <li class="nav-item"><a class="nav-link" href="{% url 'login' %}"><i class="fa-regular fa-right-from-bracket"></i> Login</a></li>
               <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>

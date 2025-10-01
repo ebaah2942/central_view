@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import uuid
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 
@@ -78,7 +79,17 @@ class Booking(models.Model):
 
     def get_total_price(self):
         return self.room.price * self.quantity
-
+    
+    def clean(self):
+        super().clean()
+        if self.check_in == self.created_at:
+            raise ValidationError({
+                'check_in': 'Check-in cannot be on the same date as the booking date.'
+            })
+        
+    def save(self, *args, **kwargs):
+        self.full_clean()   # <--- this forces clean() to run
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.user.username} - {self.check_in} to {self.check_out} ({self.room.types.category})" 

@@ -95,6 +95,14 @@ class UserUpdateForm(UserChangeForm):
     class Meta:
         model = CustomUser
         fields = ['username', 'phone_number', 'address', 'email', 'first_name', 'last_name']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'address': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+        }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if 'password' in self.fields:
